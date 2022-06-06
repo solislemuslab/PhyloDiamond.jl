@@ -1,0 +1,110 @@
+#--------------------------------
+# Testing get_a
+#--------------------------------
+
+#cd("/Users/zhaoxingwu/Desktop/claudia lab/2022 spring phylogenetic/code")
+include("../create_cf.jl")
+
+#function main()
+#println("---------------------------------------------------")
+
+# Reading CF table:
+cf = CSV.read("scripts/julia/N2222_expCF.txt", DataFrame)
+
+
+# We use the following networks to run get_a line by line (see test-get-a.pdf iPad notes)
+# Reading network
+N = [("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")] ## true network
+#N = [("A", "D"), ("C", "B"), ("E", "F"), ("G", "H")]
+N = [("A","E"),("C","B"),("D","F"),("G","H")]
+
+rst = get_a(cf, N, verbose=true)
+
+i=70
+temp = Array(cf[i, :])
+q = temp[1:4]
+cfs = [temp[5], temp[6], temp[7]]
+n = get_n(N, q)
+
+cfs_ord = cfs_in_order(N, q, cfs) #reorder cf as major, minor, minor
+                                          #according to N
+
+
+#for i in 1:Int(length(rst)/3)
+    #println(rst[i*3-2], " ", rst[i*3-1], " ", rst[i*3])
+#end
+
+#for i in 1:70
+#    temp = Array(cf[i, :])
+#    q = temp[1:4]
+#    cfs = temp[5:7]
+#    n = get_n(N, q)
+    #println(n)
+#    if n != [1, 1, 1, 1]
+        #println(cfs_in_order(N, q, cfs)[1], ", ", cfs_in_order(N, q, cfs)[2], ", ", cfs_in_order(N, q, cfs)[3])
+#    else
+        #println(cfs[1], ", ", cfs[2], ", ", cfs[3])
+#    end
+#end
+#get_a(cf, N)
+
+cfs_in_order([("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")],
+                    ["A","H","E","C"], 
+                    [0.7, 0.2, 0.1])
+cfs_in_order([("E", "F"), ("A", "B"), ("G", "H"), ("C", "D"), ],
+                    ["A","H","E","C"], 
+                    [0.7, 0.2, 0.1])
+cfs_in_order([("A", "B"), ("E", "F"), ("G", "H"), ("C", "D"), ],
+                    ["E","C","A","H"], 
+                    [0.7, 0.2, 0.1])
+#end
+
+#--------------------------------
+# Testing invariants in true N
+#--------------------------------
+
+include("../create_cf.jl")
+include("../invariants.jl")
+
+# Reading CF table:
+cf = CSV.read("scripts/julia/N2222_expCF.txt", DataFrame)
+
+# Reading network
+N = [("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")] ## true network
+
+a = get_a(cf, N)
+
+norm(inv_net1112(a))
+norm(inv_net1121(a))
+norm(inv_net1211(a))
+norm(inv_net2111(a))
+norm(inv_net1122(a))
+norm(inv_net1212(a))
+norm(inv_net2112(a))
+norm(inv_net2211(a))
+norm(inv_net2121(a))
+norm(inv_net1221(a))
+norm(inv_net1222(a))
+norm(inv_net2212(a))
+## We do not have the true invariants which are 2222, but
+## we still expect all invariants to be relative close to 0.0
+## as the order of the taxa matches with the invariants
+# this is not true for the following network
+
+# Reading network
+N = [("A","E"),("C","B"),("D","F"),("G","H")]
+a = get_a(cf, N)
+
+norm(inv_net1112(a))
+norm(inv_net1121(a))
+norm(inv_net1211(a))
+norm(inv_net2111(a))
+norm(inv_net1122(a))
+norm(inv_net1212(a))
+norm(inv_net2112(a))
+norm(inv_net2211(a))
+norm(inv_net2121(a))
+norm(inv_net1221(a))
+norm(inv_net1222(a))
+norm(inv_net2212(a))
+## They are much larger than zero, yay!

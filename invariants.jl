@@ -1,14 +1,14 @@
+using LinearAlgebra
+# I don't think we need the n argument bc there will always be 57
+# a's for these invariants
 
 """
     input:
-        n: the correct number of total concordance factors
         a: an array of concordance factors
     output: true/false whether the concordance factors fit the invariants
 """
-function inv_net1112(n, a)
-    if length(a) != n
-        return false
-    end
+function inv_net1112(a)
+    length(a) == 57 || error("wrong dimension of a")
 
     return [a[32] - a[33], 
     a[31] + 2a[33] - 1, 
@@ -22,10 +22,9 @@ function inv_net1112(n, a)
     3a[9]*a[29] - 2a[9] + 2a[24] - a[33]]
 end
 
-function inv_net1121(n, a)
-    if length(a) != n
-        return false
-    end
+function inv_net1121(a)
+    length(a) == 57 || error("wrong dimension of a")
+
     return [a[28] + a[29] + a[30] - 1, 
     a[26] - a[27], 
     a[25] + 2a[27] - 1, 
@@ -36,10 +35,9 @@ function inv_net1121(n, a)
     a[6]*a[29] + 2a[6]*a[30] - a[6] + a[21] - a[27]]
 end
 
-function inv_net1211(n, a)
-    if length(a) != n
-        return false
-    end
+function inv_net1211(a)
+    length(a) == 57 || error("wrong dimension of a")
+
     return [a[38] - a[39], 
     a[37] + 2a[39] - 1, 
     a[35] - a[36], 
@@ -50,10 +48,9 @@ function inv_net1211(n, a)
     a[15]*a[29] - a[15]*a[30] + a[36] - a[39]]
 end
 
-function inv_net2111(n, a)
-    if length(a) != n
-        return false
-    end
+function inv_net2111(a)
+    length(a) == 57 || error("wrong dimension of a")
+
     return [a[53] - a[54], 
     a[52] + 2a[54] - 1, 
     a[50] - a[51], 
@@ -63,10 +60,9 @@ function inv_net2111(n, a)
     a[28] + a[29] + a[30] - 1]
 end
 
-function inv_net1122(n, a)
-    if length(a) != n
-        return false
-    end
+function inv_net1122(a)
+    length(a) == 57 || error("wrong dimension of a")
+
     return [a[32] - a[33], 
     a[31] + 2a[33] - 1, 
     a[28] + a[29] + a[30] - 1, 
@@ -92,10 +88,9 @@ function inv_net1122(n, a)
     3a[6]*a[9] - a[3]]
 end
 
-function inv_net1212(n, a)
-    if length(a) != n
-        return false
-    end
+function inv_net1212(a)
+    length(a) == 57 || error("wrong dimension of a")
+
     return [a[38] - a[39], 
     a[37] + 2a[39] - 1, 
     a[35] - a[36], 
@@ -121,10 +116,9 @@ function inv_net1212(n, a)
     3a[9]*a[15] - a[18]]
 end
 
-function inv_net2112(n, a)
-    if length(a) != n
-        return false
-    end
+function inv_net2112(a)
+    length(a) == 57 || error("wrong dimension of a")
+
     return [a[53] - a[54], 
     a[52] + 2a[54] - 1, 
     a[50] - a[51], 
@@ -145,10 +139,9 @@ function inv_net2112(n, a)
     3a[9]*a[29] - 2a[9] + 2a[24] - a[33]]
 end
 
-function inv_net2211(n, a)
-    if length(a) != n
-        return false
-    end
+function inv_net2211(a)
+    length(a) == 57 || error("wrong dimension of a")
+
     return [a[13] + 2a[15] - 1, 
     a[14] - a[15], 
     a[28] + a[29] + a[30] - 1, 
@@ -177,10 +170,9 @@ function inv_net2211(n, a)
     3a[38]^2*a[53] - 2a[29]*a[35]*a[56] - 4a[30]*a[35]*a[56] + 2a[29]*a[38]*a[56] + 4a[30]*a[38]*a[56] + 2a[35]*a[56] - 2a[38]*a[56]]
 end
 
-function inv_net2121(n, a)
-    if length(a) != n
-        return false
-    end
+function inv_net2121(a)
+    length(a) == 57 || error("wrong dimension of a")
+
     return [a[4] + 2a[6] - 1, 
     a[5] - a[6], 
     a[28] + a[29] + a[30] - 1, 
@@ -209,10 +201,9 @@ function inv_net2121(n, a)
     6a[5]*a[26]*a[50] - 6a[20]*a[26]*a[50] + 3a[5]*a[20]*a[53] - 3a[20]^2*a[53] - 3a[5]*a[26]*a[53] + 6a[20]*a[26]*a[53]]
 end
 
-function inv_net1221(n, a)
-    if length(a) != n
-        return false
-    end
+function inv_net1221(a)
+    length(a) == 57 || error("wrong dimension of a")
+
     return [a[38] - a[39], 
     a[37] + 2a[39] - 1, 
     a[35] - a[36], 
@@ -236,10 +227,9 @@ function inv_net1221(n, a)
     a[21]*a[29]*a[36] + 2a[21]*a[30]*a[36] - a[27]*a[29]*a[39] + a[27]*a[30]*a[39] - a[15]*a[27] + a[12]*a[30] - a[6]*a[36] - a[21]*a[36] - a[27]*a[36] + 2a[21]*a[39]]
 end
 
-function inv_net1222(n, a)
-    if length(a) != n
-        return false
-    end
+function inv_net1222(a)
+    length(a) == 57 || error("wrong dimension of a")
+
     return [a[38] - a[39], 
     a[37] + 2a[39] - 1, 
     a[35] - a[36], 
@@ -289,10 +279,9 @@ function inv_net1222(n, a)
     6a[9]*a[27]*a[36] - 3a[6]*a[33]*a[36] - 3a[21]*a[33]*a[36] - 3a[9]*a[27]*a[39] - 3a[24]*a[27]*a[39] + 6a[6]*a[33]*a[39] + a[18]*a[27] - a[12]*a[33] + a[3]*a[36] - a[3]*a[39]]
 end
 
-function inv_net2212(n, a)
-    if length(a) != n
-        return false
-    end
+function inv_net2212(a)
+    length(a) == 57 || error("wrong dimension of a")
+
     return [a[16] + 2a[18] - 1, 
     a[17] - a[18], 
     a[28] + a[29] + a[30] - 1, 
