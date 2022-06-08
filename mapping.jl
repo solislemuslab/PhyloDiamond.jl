@@ -32,15 +32,46 @@ end
     output: returns the CFs in the order major, minor, minor
 """
 function cfs_in_order(N, q, cfs)
-    q_order = [] #reorder quartet according to order of N
-    for i in 1:4
-        for j in 1:4
-            if q[j] in N[i]
-                push!(q_order, q[j])
+    n = get_n(N, q)
+
+    if n != [1, 1, 1, 1] 
+        ind_major = findall(x->x==2, n)[1] # index of n with major split
+        ret = [N[ind_major][1], N[ind_major][2]] # the two taxon in the major split
+        # if q[1] is one of the two taxon in the major split
+        # locate `a` with index of the other taxon in q
+
+        if q[1] == ret[1]
+            i = findall(x->x==ret[2], q)[1]
+            if i == 2
+                return [cfs[1], cfs[2], cfs[3]]
+            elseif i == 3
+                return [cfs[2], cfs[1], cfs[3]]
+            elseif i == 4
+                return [cfs[3], cfs[1], cfs[2]]
             end
+        elseif q[1] == ret[2]
+            i = findall(x->x==ret[1], q)[1]
+            if i == 2
+                return [cfs[1], cfs[2], cfs[3]]
+            elseif i == 3
+                return [cfs[2], cfs[1], cfs[3]]
+            elseif i == 4
+                return [cfs[3], cfs[1], cfs[2]]
+            end
+        # if q[1] is not one of the two taxon in the major split
+        elseif (q[2] == ret[1]) & (q[3] == ret[2]) |
+            (q[2] == ret[2]) & (q[3] == ret[1])
+            return [cfs[3], cfs[1], cfs[2]]
+        elseif (q[2] == ret[1]) & (q[4] == ret[2]) |
+            (q[2] == ret[2]) & (q[4] == ret[1])
+            return [cfs[2], cfs[1], cfs[3]]
+        elseif (q[3] == ret[1]) & (q[4] == ret[2]) |
+            (q[3] == ret[2]) & (q[4] == ret[1])
+            return [cfs[1], cfs[2], cfs[3]]
         end
     end
 
+    #handle case1111
     #enumerate all possible order of q, and its corresponding cf
     all_cfs = []
     all_q = []
@@ -80,48 +111,20 @@ function cfs_in_order(N, q, cfs)
     push!(all_q, [q[3], q[2], q[4], q[1]])
     push!(all_q, [q[4], q[1], q[3], q[2]])
 
-    n = get_n(N, q)
+    q_order = [] #reorder quartet according to order of N
+    for i in 1:4
+        for j in 1:4
+            if q[j] in N[i]
+                push!(q_order, q[j])
+            end
+        end
+    end
 
-    if n == [1, 1, 1, 1]
+    if n == [1, 1, 1, 1] 
         ind = findall(x->x==q_order, all_q)[1] 
         return all_cfs[ind÷4+1]
     end
-
-    ind_major = findall(x->x==2, n)[1] # index of n with major split
-    ret = [N[ind_major][1], N[ind_major][2]] # the two taxon in the major split
-    # if q[1] is one of the two taxon in the major split
-    # locate `a` with index of the other taxon in q
     
-
-    if q[1] == ret[1]
-        i = findall(x->x==ret[2], q)[1]
-        if i == 2
-            return [cfs[1], cfs[2], cfs[3]]
-        elseif i == 3
-            return [cfs[2], cfs[1], cfs[3]]
-        elseif i == 4
-            return [cfs[3], cfs[1], cfs[2]]
-        end
-    elseif q[1] == ret[2]
-        i = findall(x->x==ret[1], q)[1]
-        if i == 2
-            return [cfs[1], cfs[2], cfs[3]]
-        elseif i == 3
-            return [cfs[2], cfs[1], cfs[3]]
-        elseif i == 4
-            return [cfs[3], cfs[1], cfs[2]]
-        end
-    # if q[1] is not one of the two taxon in the major split
-    elseif (q[2] == ret[1]) & (q[3] == ret[2]) |
-        (q[2] == ret[2]) & (q[3] == ret[1])
-        return [cfs[3], cfs[1], cfs[2]]
-    elseif (q[2] == ret[1]) & (q[4] == ret[2]) |
-        (q[2] == ret[2]) & (q[4] == ret[1])
-        return [cfs[2], cfs[1], cfs[3]]
-    elseif (q[3] == ret[1]) & (q[4] == ret[2]) |
-        (q[3] == ret[2]) & (q[4] == ret[1])
-        return [cfs[1], cfs[2], cfs[3]]
-    end
     return false
 end
 
