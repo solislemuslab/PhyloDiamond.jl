@@ -1,24 +1,16 @@
-#--------------------------------
-# Testing get_a
-#--------------------------------
-
-#cd("/Users/zhaoxingwu/Desktop/claudia lab/2022 spring phylogenetic/code")
+#cd("/Users/zhaoxingwu/Desktop/claudia lab/2022 spring phylogenetic/code/phylo-invariants")
 include("../create_cf.jl")
-
-#function main()
-#println("---------------------------------------------------")
 
 # Reading CF table:
 cf = CSV.read("scripts/julia/N2222_expCF.txt", DataFrame)
 
-
 # We use the following networks to run get_a line by line (see test-get-a.pdf iPad notes)
 # Reading network
-N = [("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")] ## true network
+#N = [("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")] ## true network
 #N = [("A", "D"), ("C", "B"), ("E", "F"), ("G", "H")]
 N = [("A","E"),("C","B"),("D","F"),("G","H")]
 
-rst = get_a(cf, N, verbose=true)
+rst = get_a(cf, N, verbose=false)
 
 i=70
 temp = Array(cf[i, :])
@@ -28,7 +20,6 @@ n = get_n(N, q)
 
 cfs_ord = cfs_in_order(N, q, cfs) #reorder cf as major, minor, minor
                                           #according to N
-
 
 #for i in 1:Int(length(rst)/3)
     #println(rst[i*3-2], " ", rst[i*3-1], " ", rst[i*3])
@@ -48,16 +39,69 @@ cfs_ord = cfs_in_order(N, q, cfs) #reorder cf as major, minor, minor
 #end
 #get_a(cf, N)
 
-cfs_in_order([("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")],
+#--------------------------------
+# Testing cfs_in_order
+#--------------------------------
+#(1, 1, 1, 1), N2222
+println(cfs_in_order([("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")],
                     ["A","H","E","C"], 
-                    [0.7, 0.2, 0.1])
-cfs_in_order([("E", "F"), ("A", "B"), ("G", "H"), ("C", "D"), ],
+                    [0.7, 0.2, 0.1])==[0.1, 0.2, 0.7])
+println(cfs_in_order([("E", "F"), ("A", "B"), ("G", "H"), ("C", "D"), ],
                     ["A","H","E","C"], 
-                    [0.7, 0.2, 0.1])
-cfs_in_order([("A", "B"), ("E", "F"), ("G", "H"), ("C", "D"), ],
+                    [0.7, 0.2, 0.1])==[0.2, 0.1, 0.7])
+println(cfs_in_order([("A", "B"), ("E", "F"), ("G", "H"), ("C", "D"), ],
                     ["E","C","A","H"], 
-                    [0.7, 0.2, 0.1])
-#end
+                    [0.7, 0.2, 0.1])==[0.2, 0.7, 0.1])
+
+#N2122
+println(cfs_in_order([("A", "B"), ("C", NaN), ("E", "F"), ("G", "H")],
+                ["A","B","E","C"], 
+                [0.8, 0.1, 0.1])==[0.8, 0.1, 0.1]) #2110
+println(cfs_in_order([("A", "B"), ("C", NaN), ("E", "F"), ("G", "H")],
+                ["A","E","C","B"], 
+                [0.1, 0.1, 0.8])==[0.8, 0.1, 0.1]) #2110
+println(cfs_in_order([("A", "B"), ("C", NaN), ("E", "F"), ("G", "H")],
+                ["E","G","A","C"], 
+                [0.7, 0.2, 0.1])==[0.7, 0.2, 0.1]) #1111
+println(cfs_in_order([("A", "B"), ("C", NaN), ("E", "F"), ("G", "H")],
+                ["H","G","A","B"], 
+                [0.8, 0.1, 0.1])==[0.8, 0.1, 0.1]) #2002
+
+#N2221
+println(cfs_in_order([("A", "B"), ("C", "D"), ("E", "F"), ("G", NaN)],
+                ["E","B","F","C"], 
+                [0.1, 0.8, 0.1])==[0.8, 0.1, 0.1]) #1120
+println(cfs_in_order([("A", "B"), ("C", "D"), ("E", "F"), ("G", NaN)],
+                ["A","B","C","F"], 
+                [0.8, 0.1, 0.1])==[0.8, 0.1, 0.1]) #2110
+println(cfs_in_order([("A", "B"), ("C", "D"), ("E", "F"), ("G", NaN)],
+                ["F","G","A","C"], 
+                [0.7, 0.2, 0.1])==[0.7, 0.2, 0.1]) #1111
+println(cfs_in_order([("A", "B"), ("C", "D"), ("E", "F"), ("G", NaN)],
+                ["B","F","A","E"], 
+                [0.1, 0.8, 0.1])==[0.8, 0.1, 0.1]) #2020
+
+#N2111
+println(cfs_in_order([("A", "B"), ("C", NaN), ("E", NaN), ("G", NaN)],
+                ["E","B","G","A"], 
+                [0.1, 0.8, 0.1])==[0.8, 0.1, 0.1]) #2011
+println(cfs_in_order([("A", "B"), ("C", NaN), ("E", NaN), ("G", NaN)],
+                ["B","E","G","A"], 
+                [0.1, 0.1, 0.8])==[0.8, 0.1, 0.1]) #2011
+
+#N2211
+println(cfs_in_order([("A", "B"), ("C", "D"), ("E", NaN), ("G", NaN)],
+                ["C","B","D","A"], 
+                [0.1, 0.8, 0.1])==[0.8, 0.1, 0.1]) #2200
+println(cfs_in_order([("A", "B"), ("C", "D"), ("E", NaN), ("G", NaN)],
+                ["A","B","C","D"], 
+                [0.8, 0.1, 0.1])==[0.8, 0.1, 0.1]) #2200
+println(cfs_in_order([("A", "B"), ("C", "D"), ("E", NaN), ("G", NaN)],
+                ["C","G","D","A"], 
+                [0.1, 0.8, 0.1])==[0.8, 0.1, 0.1]) #1201
+println(cfs_in_order([("A", "B"), ("C", "D"), ("E", NaN), ("G", NaN)],
+                ["E","G","C","B"], 
+                [0.7, 0.1, 0.2])==[0.7, 0.2, 0.1]) #1111
 
 #--------------------------------
 # Testing invariants in true N
