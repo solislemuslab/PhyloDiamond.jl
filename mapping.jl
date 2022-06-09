@@ -1,10 +1,20 @@
 using CSV, DataFrames
 
+function main()
+    println(cfs_in_order([("A", "B"), ("C", "D"), ("E", NaN), ("G", NaN)],
+                ["E","G","C","B"], 
+                [0.7, 0.1, 0.2])) 
+    #cf = CSV.read("scripts/julia/N2222_expCF.txt", DataFrame)
+    #get_a(cf, [("A", "B"), ("C", NaN), ("E", "F"), ("G", "H")]; verbose=true::Bool)
+end
+
 """
     input:
         N: array of tuples, individuals from each triangles of the network
         q: individuals of the quartet
         eg. get_n([("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")], ["C", "E", "G", "H"])
+            [0, 1, 1, 2]
+            get_n([("A", "B"), ("C", "D"), ("E", NaN), ("G", "H")], ["C", "E", "G", "H"])
             [0, 1, 1, 2]
     output: the number of individuals from each of the 4 triangles of the network (the quartet structure)
 """
@@ -121,8 +131,8 @@ function cfs_in_order(N, q, cfs)
     end
 
     if n == [1, 1, 1, 1] 
-        ind = findall(x->x==q_order, all_q)[1] 
-        return all_cfs[ind÷4+1]
+        ind = findall(x->x==q_order, all_q)[1]
+        return all_cfs[(ind-1)÷4+1]
     end
     
     return false
@@ -178,4 +188,4 @@ function get_a(cf, N; verbose=false::Bool)
     return a
 end
 
-#main()
+main()
