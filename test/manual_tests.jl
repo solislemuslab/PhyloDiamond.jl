@@ -1,5 +1,5 @@
 #cd("/Users/zhaoxingwu/Desktop/claudia lab/2022 spring phylogenetic/code/phylo-invariants")
-include("../create_cf.jl")
+include("../mapping.jl")
 
 # Reading CF table:
 cf = CSV.read("scripts/julia/N2222_expCF.txt", DataFrame)
@@ -107,7 +107,7 @@ println(cfs_in_order([("A", "B"), ("C", "D"), ("E", NaN), ("G", NaN)],
 # Testing invariants in true N
 #--------------------------------
 
-include("../create_cf.jl")
+include("../mapping.jl")
 include("../invariants.jl")
 
 # Reading CF table:
@@ -152,3 +152,16 @@ norm(inv_net1221(a))
 norm(inv_net1222(a))
 norm(inv_net2212(a))
 ## They are much larger than zero, yay!
+
+#--------------------------------
+# Testing list_nw
+#--------------------------------
+list_nw(t)
+t = ["A", "B", "C", "D", "E"]
+t = ["A", "B", "C", "D", "E", "F"]
+t = ["A", "B", "C", "D", "E", "F", "G"]
+t = ["A", "B", "C", "D", "E", "F", "G", "H"]
+ret = list_nw(t)
+for i in 1:length(ret)
+    println(i, ret[i])
+end
