@@ -6,6 +6,15 @@ function main()
                 [0.7, 0.1, 0.2])) 
     #cf = CSV.read("scripts/julia/N2222_expCF.txt", DataFrame)
     #get_a(cf, [("A", "B"), ("C", NaN), ("E", "F"), ("G", "H")]; verbose=true::Bool)
+
+    t = ["A", "B", "C", "D", "E"]
+    #t = ["A", "B", "C", "D", "E", "F"]
+    #t = ["A", "B", "C", "D", "E", "F", "G"]
+    #t = ["A", "B", "C", "D", "E", "F", "G", "H"]
+    ret = list_nw(t)
+    for i in 1:length(ret)
+        println(i, ret[i])
+    end
 end
 
 """
@@ -186,6 +195,93 @@ function get_a(cf, N; verbose=false::Bool)
     a = a./c
 
     return a
+end
+
+"""
+    input:
+        t: array of taxa
+        list_nw(["A", "B", "C", "D", "E", "F", "G", "H"]) ->2520
+            2222
+        list_nw(["A", "B", "C", "D", "E", "F", "G"]) ->2520
+            1222, 2122, 2212, 2221
+        list_nw(["A", "B", "C", "D", "E", "F"]) ->1080
+            1122, 1212, 1221, 2112, 2121, 2211
+        list_nw(["A", "B", "C", "D", "E"]) ->240
+            1112, 1121, 1211, 2111
+    output: 
+        the whole list of potential networks for those taxa
+"""
+function list_nw(t)
+    #fill taxa array to length 8 with "na"
+    if length(t) != 8
+        for i in 1:8-length(t)
+            push!(t, "na") #use string "na" to avoid problems of NaN
+        end
+    end
+
+    ret = Vector{Any}([])
+
+    #n0
+    for i in 1:7
+        for j in i+1:8
+            #if both items are NaN, skip
+            #since n_i should be either 1 or 2
+            if t[i]=="na" && t[j]=="na"
+                continue
+            end
+            #remove the two selected items: t[i], t[j]
+            temp = deleteat!(deepcopy(t), i) 
+            t1 = Vector{Any}(deleteat!(deepcopy(temp), j-1)) #length 6
+
+            #n1
+            for a in 1:5
+                for b in a+1:6
+                    if t1[a]=="na" && t1[b]=="na"
+                        continue
+                    end
+                    #remove the two selected items: t1[a], t1[b]
+                    temp = deleteat!(deepcopy(t1), a)
+                    t2 = Vector{Any}(deleteat!(deepcopy(temp), b-1)) #length 4
+
+                    #n2
+                    for c in 1:3
+                        for d in c+1:4
+                            if t2[c]=="na" && t2[d]=="na"
+                                continue
+                            end
+
+                            #n3
+                            #remove the two selected items: t2[c], t2[d]
+                            temp = deleteat!(deepcopy(t2), c) 
+                            t3 = Vector{Any}(deleteat!(deepcopy(temp), d-1)) #length 2
+                            if !(t3[1]=="na" && t3[2]=="na")
+                                push!(ret, Vector{Any}([
+                                    [t[i], t[j]], 
+                                    [t1[a], t1[b]], 
+                                    [t2[c], t2[d]], 
+                                    [t3[1], t3[2]]
+                                    ]))
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    ret = Vector{Vector{Vector{Any}}}(unique!(ret)) #remove duplicated items (6 or 5 taxa)
+
+    #replace string "na" to NaN
+    for i in 1:length(ret)
+        for j in 1:4
+            for k in 1:2
+                if ret[i][j][k] == "na"
+                    ret[i][j][k] = NaN
+                end
+            end
+        end
+    end
+    return ret
 end
 
 main()
