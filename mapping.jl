@@ -1,22 +1,5 @@
 using CSV, DataFrames
 
-function main()
-    println(cfs_in_order([("A", "B"), ("C", "D"), ("E", NaN), ("G", NaN)],
-                ["E","G","C","B"], 
-                [0.7, 0.1, 0.2])) 
-    #cf = CSV.read("scripts/julia/N2222_expCF.txt", DataFrame)
-    #get_a(cf, [("A", "B"), ("C", NaN), ("E", "F"), ("G", "H")]; verbose=true::Bool)
-
-    t = ["A", "B", "C", "D", "E"]
-    #t = ["A", "B", "C", "D", "E", "F"]
-    #t = ["A", "B", "C", "D", "E", "F", "G"]
-    #t = ["A", "B", "C", "D", "E", "F", "G", "H"]
-    ret = list_nw(t)
-    for i in 1:length(ret)
-        println(i, ret[i])
-    end
-end
-
 """
     input:
         N: array of tuples, individuals from each triangles of the network
@@ -56,9 +39,9 @@ function cfs_in_order(N, q, cfs)
     if n != [1, 1, 1, 1] 
         ind_major = findall(x->x==2, n)[1] # index of n with major split
         ret = [N[ind_major][1], N[ind_major][2]] # the two taxon in the major split
+
         # if q[1] is one of the two taxon in the major split
         # locate `a` with index of the other taxon in q
-
         if q[1] == ret[1]
             i = findall(x->x==ret[2], q)[1]
             if i == 2
@@ -178,6 +161,9 @@ function get_a(cf, N; verbose=false::Bool)
         verbose && @show cfs
         n = get_n(N, q)
         verbose && @show n
+        if (sum(n) != 4) #if input network does not match with cf table
+            continue
+        end
 
         cfs_ord = cfs_in_order(N, q, cfs) #reorder cf as major, minor, minor
                                           #according to N
@@ -193,7 +179,7 @@ function get_a(cf, N; verbose=false::Bool)
     end
 
     a = a./c
-
+    
     return a
 end
 
@@ -283,5 +269,3 @@ function list_nw(t)
     end
     return ret
 end
-
-main()

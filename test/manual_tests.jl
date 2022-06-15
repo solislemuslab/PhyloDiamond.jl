@@ -1,8 +1,11 @@
 #cd("/Users/zhaoxingwu/Desktop/claudia lab/2022 spring phylogenetic/code/phylo-invariants")
 include("../mapping.jl")
+using DelimitedFiles, DataFrames, CSV
+
 
 # Reading CF table:
 cf = CSV.read("scripts/julia/N2222_expCF.txt", DataFrame)
+
 
 # We use the following networks to run get_a line by line (see test-get-a.pdf iPad notes)
 # Reading network
@@ -153,15 +156,40 @@ norm(inv_net1222(a))
 norm(inv_net2212(a))
 ## They are much larger than zero, yay!
 
+#------------------------------------------------------
+# Testing invariants in true N using test_invariants.jl
+#------------------------------------------------------
+include("test_invariants.jl")
+
+N = [("A", NaN),("C","D"),("E","F"),("G","H")]
+network = "(((A)#H1:::0.8, ((#H1:::0.2,(E,F)),(G,H))),(C,D));"
+#network = "((((C,D),(A)#H1:::0.8),(#H1:::0.2,(E,F))),(G,H));"
+N_test = [("G", NaN),("E", "A"),("C","H"),("D","F")] 
+println(test_invariants(N_test, generate_cf(N, network)))
+#writedlm( "temp.csv",  test_invariants(N_test, generate_cf(N, network)), ',')
+
+t = ["A", "B", "C", "D", "E", "F", "G", "H"]
+net_all = list_nw(t)
+N = [("A", "B"),("C","D"),("E","F"),("G","H")]
+network = "(((A, B)#H1:::0.8, ((#H1:::0.2,(E, F)),(G, H))),(C, D));"
+cf = generate_cf(N, network)
+df = DataFrame()
+for i in 1:length(net_all)
+    colname = "Test$i"
+    df[!,colname] = test_invariants(net_all[i], cf)
+end
+#CSV.write( "temp.csv",  df)
+
 #--------------------------------
 # Testing list_nw
 #--------------------------------
-list_nw(t)
+
 t = ["A", "B", "C", "D", "E"]
 t = ["A", "B", "C", "D", "E", "F"]
 t = ["A", "B", "C", "D", "E", "F", "G"]
 t = ["A", "B", "C", "D", "E", "F", "G", "H"]
 ret = list_nw(t)
 for i in 1:length(ret)
-    println(i, ret[i])
+    #println(i, ret[i])
 end
+

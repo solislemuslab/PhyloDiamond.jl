@@ -20,6 +20,7 @@ using CSV
     ## With the true network having the smallest value
 ## 7. Test a wrong network to see that invariants are not close to zero
 
+"""
 function main()
     #N = [("A","B"),("C","D"),("E","F"),("G","H")]
     #network = "((((A,B))#H1:::0.8,((E,F),(#H1:::0.2,(C,D)))),(G,H));"
@@ -31,6 +32,7 @@ function main()
     N = [("A","E"),("C","B"),("D","F"),("G","H")] #test a wrong network
     println(test_invariants(N, cf))
 end
+"""
 
 """
     input:
@@ -97,4 +99,4 @@ function test_invariants(N, cf)
     norm(inv_net2212(a))]
 end
 
-main()
+#main()
