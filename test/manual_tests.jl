@@ -1,5 +1,5 @@
-#cd("/Users/zhaoxingwu/Desktop/claudia lab/2022 spring phylogenetic/code/phylo-invariants")
-include("../mapping.jl")
+#cd("/Users/zhaoxingwu/Desktop/claudia lab/2022 spring phylogenetic/phylo-invariants")
+include("../scripts/julia/mapping.jl")
 using DelimitedFiles, DataFrames, CSV
 
 
