@@ -130,7 +130,7 @@ function generate_cf(N, network)
     ## "true" concordance factors:
     cf = df_wide[:,[:tx1, :tx2, :tx3, :tx4, :expCF12, :expCF13, :expCF14]]
 
-    noise = rand(Normal(0, 0.0005), nrow(cf))
+    noise = rand(Normal(0, 0.000005), nrow(cf))
     for i in 1:nrow(cf)
         ind = randperm(3)
         if cf[i, ind[1]+4]+noise[i]<1 && cf[i, ind[1]+4]+noise[i]>0
@@ -143,6 +143,7 @@ function generate_cf(N, network)
             end
         end 
     end
+    
     return cf
 end
 
@@ -191,8 +192,10 @@ output:
 function test_all_possible_nw(t, N, network, cf)
     net_all = list_nw(t)
     df = DataFrame()
+    file = open("./test/result/rst.txt", "a")
+
     for i in 1:length(net_all)
-        colname = ""
+        colname = N_to_str(net_all[i])
         for n in net_all[i]
             for j in n
                 colname=string(colname, j)
@@ -206,12 +209,26 @@ function test_all_possible_nw(t, N, network, cf)
     insertcols!(df, 1, :row => ["1112","1121","1211","2111","1122","1212","2112","2211","2121","1221","1222","2212", "2122", "2221", "2222", "mean"])
     
     inv_mean =Matrix(df)[end,:][2:end]
-    println("========================================================")
-    println("Actual Structure: ", N)
+    write(file, "========================================================\n") 
+
+    write(file, "Actual Structure: " * N_to_str(N) * "\n")
     for i in 1:5
-        println(sort(inv_mean, rev=false)[1:5][i], ": ", net_all[sortperm(inv_mean)[1:5][i]]) #print the top large invariant mean
+        write(file, string(sort(inv_mean, rev=false)[1:5][i]) * ": " * N_to_str(net_all[sortperm(inv_mean)[1:5][i]]) * "\n")
+        #println(sort(inv_mean, rev=false)[1:5][i], ": ", net_all[sortperm(inv_mean)[1:5][i]]) #print the top large invariant mean
     end
+    close(file)
     return df
+end
+
+function N_to_str(N)
+    colname = ""
+    for n in N
+        for j in n
+            colname=string(colname, j)
+        end
+        colname=string(colname,",")
+    end
+    return colname
 end
 
 main()
