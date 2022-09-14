@@ -1,6 +1,9 @@
 # phylo-invariants
 Method to estimate phylogenetic networks from invariants
 
+- Example code for gene tree simulation
+- More detailed bash script for gene tree simulation could be found in `./simulation/sim_tree.sh`
+
 ```bash
 ./ms-converter --newick="((7:1,8:1):4, (((3:1,4:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,6:1):2):1):1);" --run --n 100 --output=sim_trees_2222_100
 

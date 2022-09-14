@@ -44,237 +44,171 @@ function main()
     #net = readTopology(network2222)
     #plot(net,:R, showEdgeLength=true)
     sim_with_gene_trees()
+    #sim_with_noise()
 end
 
 function sim_with_gene_trees()
-    path = "./simulation/result"
-    path_sim_tree = "./simulation/sim_trees_n3"
-    num_genetrees = 10000
-    network = ["2222", "2221", "2212", "2122", "1222", "2211", "2121", "2112", "1221", "1212", "1122"]
-    t = ["1", "2", "3", "4", "5", "6", "7", "8"]
-    N = [("1", "2"), ("3", "4"), ("5", "6"), ("7", "8")]
-    network2222 = "((7:1,8:1):4, (((3:1,4:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,6:1):2):1):1);"
-    cf = generate_cf_from_gene_trees(string(path_sim_tree, "/sim_trees_2222_", num_genetrees))
-    df = test_all_possible_nw(t, N, network2222, cf, path)
-    CSV.write(path*"/network2222.csv",  df)
 
-    t = ["1", "2", "3", "4", "5", "6", "7"]
-    N = [("1", "2"), ("3", "4"), ("5", "6"), ("7")]
-    network2221 = "((7:1):4, (((3:1,4:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,6:1):2):1):1);"
-    cf = generate_cf_from_gene_trees(string(path_sim_tree, "/sim_trees_2221_", num_genetrees))
-    df = test_all_possible_nw(t, N, network2221, cf, path)
-    CSV.write(path*"/network2221.csv",  df)
+    for i in 0:5
+        for num_genetrees in [100, 1000, 10000]
 
-    t = ["1", "2", "3", "4", "5", "6", "7"]
-    N = [("1", "2"), ("3", "4"), ("5"), ("7", "6")]
-    network2212 = "((7:1,6:1):4, (((3:1,4:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1):2):1):1);"
-    cf = generate_cf_from_gene_trees(string(path_sim_tree, "/sim_trees_2212_", num_genetrees))
-    df = test_all_possible_nw(t, N, network2212, cf, path)
-    CSV.write(path*"/network2212.csv",  df)
+            path = "./simulation/result/genetrees_"*string(num_genetrees)*"/"*string(i)
+            path_sim_tree = "./simulation/sim_trees" 
+            mkdir(path)
+            network = ["2222", "2221", "2212", "2122", "1222", "2211", "2121", "2112", "1221", "1212", "1122"]
+            t = ["1", "2", "3", "4", "5", "6", "7", "8"]
+            N = [("1", "2"), ("3", "4"), ("5", "6"), ("7", "8")]
+            network2222 = "((7:1,8:1):4, (((3:1,4:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,6:1):2):1):1);"
+            cf = generate_cf_from_gene_trees(string(path_sim_tree, "/", num_genetrees, "/sim_trees_2222_", num_genetrees, "_", i))
+            df = test_all_possible_nw(t, N, network2222, cf, path)
+            CSV.write(path*"/network2222.csv",  df)
+            
+            t = ["1", "2", "3", "4", "5", "6", "7"]
+            N = [("1", "2"), ("3", "4"), ("5", "6"), ("7")]
+            network2221 = "((7:1):4, (((3:1,4:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,6:1):2):1):1);"
+            cf = generate_cf_from_gene_trees(string(path_sim_tree, "/", num_genetrees, "/sim_trees_2221_", num_genetrees, "_", i))
+            df = test_all_possible_nw(t, N, network2221, cf, path)
+            CSV.write(path*"/network2221.csv",  df)
 
-    t = ["1", "2", "3", "4", "5", "6", "7"]
-    N = [("1", "2"), ("3"), ("5", "6"), ("7", "4")]
-    network2122 = "((7:1,4:1):4, (((3:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,6:1):2):1):1);"
-    cf = generate_cf_from_gene_trees(string(path_sim_tree, "/sim_trees_2122_", num_genetrees))
-    df = test_all_possible_nw(t, N, network2122, cf, path)
-    CSV.write(path*"/network2122.csv",  df)
+            t = ["1", "2", "3", "4", "5", "6", "7"]
+            N = [("1", "2"), ("3", "4"), ("5"), ("7", "6")]
+            network2212 = "((7:1,6:1):4, (((3:1,4:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1):2):1):1);"
+            cf = generate_cf_from_gene_trees(string(path_sim_tree, "/", num_genetrees, "/sim_trees_2212_", num_genetrees, "_", i))
+            df = test_all_possible_nw(t, N, network2212, cf, path)
+            CSV.write(path*"/network2212.csv",  df)
 
-    t = ["1", "2", "3", "4", "5", "6", "7"]
-    N = [("1"), ("3", "4"), ("5", "6"), ("7", "2")]
-    network1222 = "((7:1,2:1):4, (((3:1,4:1):2, ((1:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,6:1):2):1):1);"
-    cf = generate_cf_from_gene_trees(string(path_sim_tree, "/sim_trees_1222_", num_genetrees))
-    df = test_all_possible_nw(t, N, network1222, cf, path)
-    CSV.write(path*"/network1222.csv",  df)
+            t = ["1", "2", "3", "4", "5", "6", "7"]
+            N = [("1", "2"), ("3"), ("5", "6"), ("7", "4")]
+            network2122 = "((7:1,4:1):4, (((3:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,6:1):2):1):1);"
+            cf = generate_cf_from_gene_trees(string(path_sim_tree, "/", num_genetrees, "/sim_trees_2122_", num_genetrees, "_", i))
+            df = test_all_possible_nw(t, N, network2122, cf, path)
+            CSV.write(path*"/network2122.csv",  df)
 
-    t = ["1", "2", "3", "4", "5", "6"]
-    N = [("1", "2"), ("3", "4"), ("5"), ("6")]
-    network2211 = "((6:1):4, (((3:1,4:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1):2):1):1);"
-    cf = generate_cf_from_gene_trees(string(path_sim_tree, "/sim_trees_2211_", num_genetrees))
-    df = test_all_possible_nw(t, N, network2211, cf, path)
-    CSV.write(path*"/network2211.csv",  df)
+            t = ["1", "2", "3", "4", "5", "6", "7"]
+            N = [("1"), ("3", "4"), ("5", "6"), ("7", "2")]
+            network1222 = "((7:1,2:1):4, (((3:1,4:1):2, ((1:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,6:1):2):1):1);"
+            cf = generate_cf_from_gene_trees(string(path_sim_tree, "/", num_genetrees, "/sim_trees_1222_", num_genetrees, "_", i))
+            df = test_all_possible_nw(t, N, network1222, cf, path)
+            CSV.write(path*"/network1222.csv",  df)
 
-    t = ["1", "2", "3", "4", "5", "6"]
-    N = [("1", "2"), ("3"), ("5", "4"), ("6")]
-    network2121 = "((6:1):4, (((3:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,4:1):2):1):1);"
-    cf = generate_cf_from_gene_trees(string(path_sim_tree, "/sim_trees_2121_", num_genetrees))
-    df = test_all_possible_nw(t, N, network2121, cf, path)
-    CSV.write(path*"/network2121.csv",  df)
+            t = ["1", "2", "3", "4", "5", "6"]
+            N = [("1", "2"), ("3", "4"), ("5"), ("6")]
+            network2211 = "((6:1):4, (((3:1,4:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1):2):1):1);"
+            cf = generate_cf_from_gene_trees(string(path_sim_tree, "/", num_genetrees, "/sim_trees_2211_", num_genetrees, "_", i))
+            df = test_all_possible_nw(t, N, network2211, cf, path)
+            CSV.write(path*"/network2211.csv",  df)
 
-    t = ["1", "2", "3", "4", "5", "6"]
-    N = [("1", "2"), ("3"), ("5"), ("4", "6")]
-    network2112 = "((4:1,6:1):4, (((3:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1):2):1):1);"
-    cf = generate_cf_from_gene_trees(string(path_sim_tree, "/sim_trees_2112_", num_genetrees))
-    df = test_all_possible_nw(t, N, network2112, cf, path)
-    CSV.write(path*"/network2112.csv",  df)
+            t = ["1", "2", "3", "4", "5", "6"]
+            N = [("1", "2"), ("3"), ("5", "4"), ("6")]
+            network2121 = "((6:1):4, (((3:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,4:1):2):1):1);"
+            cf = generate_cf_from_gene_trees(string(path_sim_tree, "/", num_genetrees, "/sim_trees_2121_", num_genetrees, "_", i))
+            df = test_all_possible_nw(t, N, network2121, cf, path)
+            CSV.write(path*"/network2121.csv",  df)
 
-    t = ["1", "2", "3", "4", "5", "6"]
-    N = [("1"), ("3", "4"), ("5", "6"), ("2")]
-    network1221 = "((2:1):4, (((3:1,4:1):2, ((1:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,6:1):2):1):1);"
-    cf = generate_cf_from_gene_trees(string(path_sim_tree, "/sim_trees_1221_", num_genetrees))
-    df = test_all_possible_nw(t, N, network1221, cf, path)
-    CSV.write(path*"/network1221.csv",  df)
+            t = ["1", "2", "3", "4", "5", "6"]
+            N = [("1", "2"), ("3"), ("5"), ("4", "6")]
+            network2112 = "((4:1,6:1):4, (((3:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1):2):1):1);"
+            cf = generate_cf_from_gene_trees(string(path_sim_tree, "/", num_genetrees, "/sim_trees_2112_", num_genetrees, "_", i))
+            df = test_all_possible_nw(t, N, network2112, cf, path)
+            CSV.write(path*"/network2112.csv",  df)
 
-    t = ["1", "2", "3", "4", "5", "6"]
-    N = [("1"), ("3", "4"), ("2"), ("5", "6")]
-    network1212 = "((5:1,6:1):4, (((3:1,4:1):2, ((1:1):1)#H1:1::0.7):1, (#H1:1::0.3,(2:1):2):1):1);"
-    cf = generate_cf_from_gene_trees(string(path_sim_tree, "/sim_trees_1212_", num_genetrees))
-    df = test_all_possible_nw(t, N, network1212, cf, path)
-    CSV.write(path*"/network1212.csv",  df)
+            t = ["1", "2", "3", "4", "5", "6"]
+            N = [("1"), ("3", "4"), ("5", "6"), ("2")]
+            network1221 = "((2:1):4, (((3:1,4:1):2, ((1:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,6:1):2):1):1);"
+            cf = generate_cf_from_gene_trees(string(path_sim_tree, "/", num_genetrees, "/sim_trees_1221_", num_genetrees, "_", i))
+            df = test_all_possible_nw(t, N, network1221, cf, path)
+            CSV.write(path*"/network1221.csv",  df)
 
-    t = ["1", "2", "3", "4", "5", "6"]
-    N = [("1"), ("2"), ("3", "4"), ("5", "6")]
-    network1122 = "((5:1,6:1):4, (((2:1):2, ((1:1):1)#H1:1::0.7):1, (#H1:1::0.3,(3:1,4:1):2):1):1);"
-    cf = generate_cf_from_gene_trees(string(path_sim_tree, "/sim_trees_1122_", num_genetrees))
-    df = test_all_possible_nw(t, N, network1122, cf, path)
-    CSV.write(path*"/network1122.csv",  df)
+            t = ["1", "2", "3", "4", "5", "6"]
+            N = [("1"), ("3", "4"), ("2"), ("5", "6")]
+            network1212 = "((5:1,6:1):4, (((3:1,4:1):2, ((1:1):1)#H1:1::0.7):1, (#H1:1::0.3,(2:1):2):1):1);"
+            cf = generate_cf_from_gene_trees(string(path_sim_tree, "/", num_genetrees, "/sim_trees_1212_", num_genetrees, "_", i))
+            df = test_all_possible_nw(t, N, network1212, cf, path)
+            CSV.write(path*"/network1212.csv",  df)
 
-    """
-    t = ["1", "2", "3", "4", "5", "6", "7", "8"]
-    N = [("1", "2"), ("3", "4"), ("5", "6"), ("7", "8")]
-    network2222 = "((((1:1,2:1):1)#H1:1.5::0.7, ((#H1:0.5::0.3,(5:1,6:1):2):0.5,(7:1,8:1):2):0.5):1,(3:1,4:1):2);"
-    cf = generate_cf_from_gene_trees(string("./simulation/sim_trees/sim_trees_2222_", num_genetrees))
-    df = test_all_possible_nw(t, N, network2222, cf, path)
-    CSV.write(path*"/network2222.csv",  df)
-
-    t = ["1", "2", "3", "4", "5", "6", "7"]
-    N = [("1", "2"), ("3", "4"), ("5", "6"), ("7")]
-    network2221 = "((((1:1,2:1):1)#H1:1.5::0.7, ((#H1:0.5::0.3,(5:1,6:1):2):0.5,(7:1):2):0.5):1,(3:1,4:1):2);"
-    cf = generate_cf_from_gene_trees(string("./simulation/sim_trees/sim_trees_2221_", num_genetrees))
-    df = test_all_possible_nw(t, N, network2221, cf, path)
-    CSV.write(path*"/network2221.csv",  df)
-
-    t = ["1", "2", "3", "4", "5", "7", "8"]
-    N = [("1", "2"), ("3", "4"), ("5"), ("7", "8")]
-    network2212 = "((((1:1,2:1):1)#H1:1.5::0.7, ((#H1:0.5::0.3,(5:1):2):0.5,(7:1,8:1):2):0.5):1,(3:1,4:1):2);"
-    cf = generate_cf_from_gene_trees(string("./simulation/sim_trees/sim_trees_2212_", num_genetrees))
-    df = test_all_possible_nw(t, N, network2212, cf, path)
-    CSV.write(path*"/network2212.csv",  df)
-
-    t = ["1", "2", "3", "5", "6", "7", "8"]
-    N = [("1", "2"), ("3"), ("5", "6"), ("7", "8")]
-    network2122 = "((((1:1,2:1):1)#H1:1.5::0.7, ((#H1:0.5::0.3,(5:1,6:1):2):0.5,(7:1,8:1):2):0.5):1,(3:1):2);"
-    cf = generate_cf_from_gene_trees(string("./simulation/sim_trees/sim_trees_2122_", num_genetrees))
-    df = test_all_possible_nw(t, N, network2122, cf, path)
-    CSV.write(path*"/network2122.csv",  df)
-
-    t = ["1", "3", "4", "5", "6", "7", "8"]
-    N = [("1"), ("3", "4"), ("5", "6"), ("7", "8")]
-    network1222 = "((((1:1):1)#H1:1.5::0.7, ((#H1:0.5::0.3,(5:1,6:1):2):0.5,(7:1,8:1):2):0.5):1,(3:1,4:1):2);"
-    cf = generate_cf_from_gene_trees(string("./simulation/sim_trees/sim_trees_1222_", num_genetrees))
-    df = test_all_possible_nw(t, N, network1222, cf, path)
-    CSV.write(path*"/network1222.csv",  df)
-
-    t = ["1", "2", "3", "4", "5", "6"]
-    N = [("1", "2"), ("3", "4"), ("5"), ("6")]
-    network2211 = "((((1:1,2:1):1)#H1:1.5::0.7, ((#H1:0.5::0.3,(5:1):2):0.5,(6:1):2):0.5):1,(3:1,4:1):2);"
-    cf = generate_cf_from_gene_trees(string("./simulation/sim_trees/sim_trees_2211_", num_genetrees))
-    df = test_all_possible_nw(t, N, network2211, cf, path)
-    CSV.write(path*"/network2211.csv",  df)
-
-    t = ["1", "2", "3", "4", "5", "6"]
-    N = [("1", "2"), ("3"), ("5", "4"), ("6")]
-    network2121 = "((((1:1,2:1):1)#H1:1.5::0.7, ((#H1:0.5::0.3,(5:1,4:1):2):0.5,(6:1):2):0.5):1,(3:1):2);"
-    cf = generate_cf_from_gene_trees(string("./simulation/sim_trees/sim_trees_2121_", num_genetrees))
-    df = test_all_possible_nw(t, N, network2121, cf, path)
-    CSV.write(path*"/network2121.csv",  df)
-
-    t = ["1", "2", "3", "4", "5", "6"]
-    N = [("1", "2"), ("3"), ("5"), ("4", "6")]
-    network2112 = "((((1:1,2:1):1)#H1:1.5::0.7, ((#H1:0.5::0.3,(5:1):2):0.5,(6:1,4:1):2):0.5):1,(3:1):2);"
-    cf = generate_cf_from_gene_trees(string("./simulation/sim_trees/sim_trees_2112_", num_genetrees))
-    df = test_all_possible_nw(t, N, network2112, cf, path)
-    CSV.write(path*"/network2112.csv",  df)
-
-    t = ["1", "2", "3", "4", "5", "6"]
-    N = [("1"), ("3", "4"), ("5", "6"), ("2")]
-    network1221 = "((((1:1):1)#H1:1.5::0.7, ((#H1:0.5::0.3,(5:1,6:1):2):0.5,(2:1):2):0.5):1,(3:1,4:1):2);"
-    cf = generate_cf_from_gene_trees(string("./simulation/sim_trees/sim_trees_1221_", num_genetrees))
-    df = test_all_possible_nw(t, N, network1221, cf, path)
-    CSV.write(path*"/network1221.csv",  df)
-
-    t = ["1", "2", "3", "4", "5", "6"]
-    N = [("1"), ("3", "4"), ("2"), ("5", "6")]
-    network1212 = "((((1:1):1)#H1:1.5::0.7, ((#H1:0.5::0.3,(2:1):2):0.5,(5:1,6:1):2):0.5):1,(3:1,4:1):2);"
-    cf = generate_cf_from_gene_trees(string("./simulation/sim_trees/sim_trees_1212_", num_genetrees))
-    df = test_all_possible_nw(t, N, network1212, cf, path)
-    CSV.write(path*"/network1212.csv",  df)
-
-    t = ["1", "2", "3", "4", "5", "6"]
-    N = [("1"), ("2"), ("3", "4"), ("5", "6")]
-    network1122 = "((((1:1):1)#H1:1.5::0.7, ((#H1:0.5::0.3,(3:1,4:1):2):0.5,(5:1,6:1):2):0.5):1,(2:1):2);"
-    cf = generate_cf_from_gene_trees(string("./simulation/sim_trees/sim_trees_1122_", num_genetrees))
-    df = test_all_possible_nw(t, N, network1122, cf, path)
-    CSV.write(path*"/network1122.csv",  df)
-    """
+            t = ["1", "2", "3", "4", "5", "6"]
+            N = [("1"), ("2"), ("3", "4"), ("5", "6")]
+            network1122 = "((5:1,6:1):4, (((2:1):2, ((1:1):1)#H1:1::0.7):1, (#H1:1::0.3,(3:1,4:1):2):1):1);"
+            cf = generate_cf_from_gene_trees(string(path_sim_tree, "/", num_genetrees, "/sim_trees_1122_", num_genetrees, "_", i))
+            df = test_all_possible_nw(t, N, network1122, cf, path)
+            CSV.write(path*"/network1122.csv",  df)
+            
+        end
+    end
 end
 
 function sim_with_noise()
-    path = "./test/result/"
-    t = ["A", "B", "C", "D", "E", "F", "G", "H"]
-    N = [("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")]
-    network = "(((A,B)#H1:::0.8, ((#H1:::0.2,(E,F)),(G,H))),(C,D));"
-    df = test_all_possible_nw(t, N, network, generate_cf(N, network), path)
-    CSV.write(path*"/network2222.csv",  df)
-    
-    t = ["A", "B", "C", "D", "E", "F", "G"]
-    N = [("A", "B"), ("C", "D"), ("E", "F"), ("G", NaN)]
-    network = "(((A,B)#H1:::0.8, ((#H1:::0.2,(E,F)),(G))),(C,D));"
-    df = test_all_possible_nw(t, N, network, generate_cf(N, network), path)
-    CSV.write(path*"/network2221.csv",  df)
-    
-    t = ["A", "B", "C", "D", "E", "F", "G"]
-    N = [("A", "B"), ("C", "D"), ("E", NaN), ("G", "F")]
-    network = "(((A,B)#H1:::0.8, ((#H1:::0.2,(E)),(G,F))),(C,D));"
-    df = test_all_possible_nw(t, N, network, generate_cf(N, network), path)
-    CSV.write(path*"/network2212.csv",  df)
-    
-    t = ["A", "B", "C", "D", "E", "F", "G"]
-    N = [("A", "B"), ("C", NaN), ("E", "F"), ("G", "D")]
-    network = "(((A,B)#H1:::0.8, ((#H1:::0.2,(E,F)),(G,D))),(C));"
-    df = test_all_possible_nw(t, N, network, generate_cf(N, network), path)
-    CSV.write(path*"/network2122.csv",  df)
+    for i in 2:5
+        for sd in [0.0005, 0.00005, 0.000005]
+            path = "./simulation/result/noise_normal_0_"*string(sd)*"/"*string(i)
+            mkdir(path)
+            t = ["A", "B", "C", "D", "E", "F", "G", "H"]
+            N = [("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")]
+            network = "(((A,B)#H1:::0.8, ((#H1:::0.2,(E,F)),(G,H))),(C,D));"
+            df = test_all_possible_nw(t, N, network, generate_cf(N, network, sd), path)
+            CSV.write(path*"/network2222.csv",  df)
+            
+            t = ["A", "B", "C", "D", "E", "F", "G"]
+            N = [("A", "B"), ("C", "D"), ("E", "F"), ("G", NaN)]
+            network = "(((A,B)#H1:::0.8, ((#H1:::0.2,(E,F)),(G))),(C,D));"
+            df = test_all_possible_nw(t, N, network, generate_cf(N, network, sd), path)
+            CSV.write(path*"/network2221.csv",  df)
+            
+            t = ["A", "B", "C", "D", "E", "F", "G"]
+            N = [("A", "B"), ("C", "D"), ("E", NaN), ("G", "F")]
+            network = "(((A,B)#H1:::0.8, ((#H1:::0.2,(E)),(G,F))),(C,D));"
+            df = test_all_possible_nw(t, N, network, generate_cf(N, network, sd), path)
+            CSV.write(path*"/network2212.csv",  df)
+            
+            t = ["A", "B", "C", "D", "E", "F", "G"]
+            N = [("A", "B"), ("C", NaN), ("E", "F"), ("G", "D")]
+            network = "(((A,B)#H1:::0.8, ((#H1:::0.2,(E,F)),(G,D))),(C));"
+            df = test_all_possible_nw(t, N, network, generate_cf(N, network, sd), path)
+            CSV.write(path*"/network2122.csv",  df)
 
-    t = ["A", "B", "C", "D", "E", "F", "G"]
-    N = [("A", NaN), ("C", "D"), ("E", "F"), ("G", "B")]
-    network = "(((A)#H1:::0.8, ((#H1:::0.2,(E,F)),(G,B))),(C,D));"
-    df = test_all_possible_nw(t, N, network, generate_cf(N, network), path)
-    CSV.write(path*"/network1222.csv",  df)
-    
-    t = ["A", "B", "C", "D", "E", "F"]
-    N = [("A", "B"), ("C", "D"), ("E", NaN), ("F", NaN)]
-    network = "(((A,B)#H1:::0.8, ((#H1:::0.2,(E)),(F))),(C,D));"
-    df = test_all_possible_nw(t, N, network, generate_cf(N, network), path)
-    CSV.write(path*"/network2211.csv",  df)
+            t = ["A", "B", "C", "D", "E", "F", "G"]
+            N = [("A", NaN), ("C", "D"), ("E", "F"), ("G", "B")]
+            network = "(((A)#H1:::0.8, ((#H1:::0.2,(E,F)),(G,B))),(C,D));"
+            df = test_all_possible_nw(t, N, network, generate_cf(N, network, sd), path)
+            CSV.write(path*"/network1222.csv",  df)
+            
+            t = ["A", "B", "C", "D", "E", "F"]
+            N = [("A", "B"), ("C", "D"), ("E", NaN), ("F", NaN)]
+            network = "(((A,B)#H1:::0.8, ((#H1:::0.2,(E)),(F))),(C,D));"
+            df = test_all_possible_nw(t, N, network, generate_cf(N, network, sd), path)
+            CSV.write(path*"/network2211.csv",  df)
 
-    t = ["A", "B", "C", "D", "E", "F"]
-    N = [("A", "B"), ("C", NaN), ("E", "D"), ("F", NaN)]
-    network = "(((A,B)#H1:::0.8, ((#H1:::0.2,(E,D)),(F))),(C));"
-    df = test_all_possible_nw(t, N, network, generate_cf(N, network), path)
-    CSV.write(path*"/network2121.csv",  df)
+            t = ["A", "B", "C", "D", "E", "F"]
+            N = [("A", "B"), ("C", NaN), ("E", "D"), ("F", NaN)]
+            network = "(((A,B)#H1:::0.8, ((#H1:::0.2,(E,D)),(F))),(C));"
+            df = test_all_possible_nw(t, N, network, generate_cf(N, network, sd), path)
+            CSV.write(path*"/network2121.csv",  df)
 
-    t = ["A", "B", "C", "D", "E", "F"]
-    N = [("A", "B"), ("C", NaN), ("E", NaN), ("F", "D")]
-    network = "(((A,B)#H1:::0.8, ((#H1:::0.2,(E)),(F, D))),(C));"
-    df = test_all_possible_nw(t, N, network, generate_cf(N, network), path)
-    CSV.write(path*"/network2112.csv",  df)
+            t = ["A", "B", "C", "D", "E", "F"]
+            N = [("A", "B"), ("C", NaN), ("E", NaN), ("F", "D")]
+            network = "(((A,B)#H1:::0.8, ((#H1:::0.2,(E)),(F, D))),(C));"
+            df = test_all_possible_nw(t, N, network, generate_cf(N, network, sd), path)
+            CSV.write(path*"/network2112.csv",  df)
 
-    t = ["A", "B", "C", "D", "E", "F"]
-    N = [("A", NaN), ("C", "D"), ("E", "F"), ("B", NaN)]
-    network = "(((A)#H1:::0.8, ((#H1:::0.2,(E,F)),(B))),(C,D));"
-    df = test_all_possible_nw(t, N, network, generate_cf(N, network), path)
-    CSV.write(path*"/network1221.csv",  df)
+            t = ["A", "B", "C", "D", "E", "F"]
+            N = [("A", NaN), ("C", "D"), ("E", "F"), ("B", NaN)]
+            network = "(((A)#H1:::0.8, ((#H1:::0.2,(E,F)),(B))),(C,D));"
+            df = test_all_possible_nw(t, N, network, generate_cf(N, network, sd), path)
+            CSV.write(path*"/network1221.csv",  df)
 
-    t = ["A", "B", "C", "D", "E", "F"]
-    N = [("A", NaN), ("C", "D"), ("B", NaN), ("E", "F")]
-    network = "(((A)#H1:::0.8, ((#H1:::0.2,(B)),(E,F))),(C,D));"
-    df = test_all_possible_nw(t, N, network, generate_cf(N, network), path)
-    CSV.write(path*"/network1212.csv",  df)
+            t = ["A", "B", "C", "D", "E", "F"]
+            N = [("A", NaN), ("C", "D"), ("B", NaN), ("E", "F")]
+            network = "(((A)#H1:::0.8, ((#H1:::0.2,(B)),(E,F))),(C,D));"
+            df = test_all_possible_nw(t, N, network, generate_cf(N, network, sd), path)
+            CSV.write(path*"/network1212.csv",  df)
 
-    t = ["A", "B", "C", "D", "E", "F"]
-    N = [("A", NaN), ("B", NaN), ("C", "D"), ("E", "F")]
-    network = "(((A)#H1:::0.8, ((#H1:::0.2,(C,D)),(E,F))),(B));"
-    df = test_all_possible_nw(t, N, network, generate_cf(N, network), path)
-    CSV.write(path*"/network1122.csv",  df)
+            t = ["A", "B", "C", "D", "E", "F"]
+            N = [("A", NaN), ("B", NaN), ("C", "D"), ("E", "F")]
+            network = "(((A)#H1:::0.8, ((#H1:::0.2,(C,D)),(E,F))),(B));"
+            df = test_all_possible_nw(t, N, network, generate_cf(N, network, sd), path)
+            CSV.write(path*"/network1122.csv",  df)
+        end
+    end
 end
 
 #"./simulation/sim_trees_2222_100"
@@ -291,7 +225,7 @@ end
         network: the parenthetical format based on the wiki rules
     output: the table of CF values
 """
-function generate_cf(N, network)
+function generate_cf(N, network, sd)
     net = readTopology(network)
     plot(net,:R) ## just to check it matches your drawing
     
@@ -320,7 +254,7 @@ function generate_cf(N, network)
     cf = df_wide[:,[:tx1, :tx2, :tx3, :tx4, :expCF12, :expCF13, :expCF14]]
 
     ## adding noise to cf table
-    noise = rand(Normal(0, 0.000005), nrow(cf))
+    noise = rand(Normal(0, sd), nrow(cf))
     for i in 1:nrow(cf)
         ind = randperm(3)
         if cf[i, ind[1]+4]+noise[i]<1 && cf[i, ind[1]+4]+noise[i]>0
