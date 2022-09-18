@@ -1,0 +1,165 @@
+========================================================
+Actual Structure: AB,CD,EF,GH,
+(True network) YES! It is selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 1
+(True network) Invariant difference: 0.0
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 2
+(True network -symmetric) Invariant difference: 7.797670090640318e-6
+0.00014376168407604335: AB,CD,EF,GH,
+0.00015155935416668367: AB,EF,CD,GH,
+0.012220183266357312: AB,GH,CD,EF,
+0.01250418451842258: AB,CD,GH,EF,
+0.017203960417189353: CD,AB,EF,GH,
+========================================================
+Actual Structure: AB,CD,EF,G,
+(True network) YES! It is selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 1
+(True network) Invariant difference: 0.0
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 2
+(True network -symmetric) Invariant difference: 5.091675073289352e-7
+0.0001702166225414858: AB,CD,EF,G,
+0.00017072579004881474: AB,EF,CD,G,
+0.012908475723521452: AB,CD,G,EF,
+0.012948666390199677: AB,G,CD,EF,
+0.013262623784737363: CD,AB,EF,G,
+========================================================
+Actual Structure: AB,CD,E,GF,
+(True network) YES! It is selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 1
+(True network) Invariant difference: 0.0
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 2
+(True network -symmetric) Invariant difference: 6.019448280267058e-7
+9.257930262893004e-5: AB,CD,E,FG,
+9.318124745695674e-5: AB,E,CD,FG,
+9.805278673882508e-5: AB,CD,FG,E,
+9.807737934475558e-5: AB,FG,CD,E,
+0.007797405888875599: CD,AB,FG,E,
+========================================================
+Actual Structure: AB,C,EF,GD,
+(True network) YES! It is selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 1
+(True network) Invariant difference: 0.0
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 2
+(True network -symmetric) Invariant difference: 1.0357719739315357e-6
+0.00012982279446434607: AB,C,EF,DG,
+0.0001308585664382776: AB,EF,C,DG,
+0.00017749022599335119: AB,DG,EF,C,
+0.00017750824866726296: AB,EF,DG,C,
+0.012943845888523379: AB,DG,C,EF,
+========================================================
+Actual Structure: A,CD,EF,GB,
+(True network) YES! It is selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 1
+(True network) Invariant difference: 0.0
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 2
+(True network -symmetric) Invariant difference: 1.0952525153692667e-5
+0.0002568882515638585: A,CD,EF,BG,
+0.00026784077671755115: A,EF,CD,BG,
+0.011472925616051777: BG,EF,CD,A,
+0.011473218270811466: BG,CD,EF,A,
+0.011873891835930841: EF,BG,CD,A,
+========================================================
+Actual Structure: AB,CD,E,F,
+(True network -symmetric) YES! It is selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 1
+(True network -symmetric) Invariant difference: 0.0
+(True network) NO! It is not selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 2
+(True network) Invariant difference: 1.043544591017298e-18
+7.008744931719849e-5: AB,E,CD,F,
+7.008744931719953e-5: AB,CD,E,F,
+7.011929385302772e-5: AB,CD,F,E,
+7.011929385302846e-5: AB,F,CD,E,
+0.004341398892153534: CD,F,AB,E,
+========================================================
+Actual Structure: AB,C,ED,F,
+(True network) YES! It is selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 1
+(True network) Invariant difference: 0.0
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 2
+(True network -symmetric) Invariant difference: 1.2739375526704677e-18
+0.00012018611759312616: AB,C,DE,F,
+0.00012018611759312743: AB,DE,C,F,
+0.0001278681776864628: AB,DE,F,C,
+0.00012786817768646727: AB,F,DE,C,
+0.014980607350906021: AB,C,F,DE,
+========================================================
+Actual Structure: AB,C,E,FD,
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 5
+(True network -symmetric) Invariant difference: 3.5092282767829573e-6
+(True network) NO! It is not selected as the top network
+(True network) NO! It is not selected as one of the top 5 networks
+(True network) Rank: 6
+(True network) Invariant difference: 6.004687520724046e-6
+0.00017919883416418745: AB,DF,C,E,
+0.00017919883416418875: AB,C,DF,E,
+0.00017985472959163975: AB,DF,E,C,
+0.00017985472959164037: AB,E,DF,C,
+0.0001827080624409704: AB,E,C,DF,
+========================================================
+Actual Structure: A,CD,EF,B,
+(True network) YES! It is selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 1
+(True network) Invariant difference: 0.0
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 2
+(True network -symmetric) Invariant difference: 3.391200709905017e-7
+0.00018949177177080811: A,CD,EF,B,
+0.00018983089184179862: A,EF,CD,B,
+0.010464050727215665: CD,A,EF,B,
+0.010464050727215674: CD,EF,A,B,
+0.01046556202230677: CD,B,EF,A,
+========================================================
+Actual Structure: A,CD,B,EF,
+(True network) YES! It is selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 1
+(True network) Invariant difference: 0.0
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 2
+(True network -symmetric) Invariant difference: 1.0333460697547335e-5
+5.9453392061493156e-5: A,CD,B,EF,
+6.978685275904049e-5: A,B,CD,EF,
+7.417428577146544e-5: A,EF,CD,B,
+7.419487196683304e-5: A,CD,EF,B,
+0.005227792909784864: CD,EF,A,B,
+========================================================
+Actual Structure: A,B,CD,EF,
+(True network -symmetric) YES! It is selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 1
+(True network -symmetric) Invariant difference: 0.0
+(True network) NO! It is not selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 2
+(True network) Invariant difference: 2.17532253667116e-5
+0.00016395858734859488: A,CD,B,EF,
+0.00018571181271530648: A,B,CD,EF,
+0.00026125974408383053: A,EF,CD,B,
+0.00026148298127304226: A,CD,EF,B,
+0.005286891397796786: CD,EF,A,B,

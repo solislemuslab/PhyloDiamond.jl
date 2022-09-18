@@ -257,15 +257,5 @@ function list_nw(t)
 
     ret = Vector{Vector{Vector{Any}}}(unique!(ret)) #remove duplicated items (6 or 5 taxa)
 
-    #replace string "na" to NaN
-    for i in 1:length(ret)
-        for j in 1:4
-            for k in 1:2
-                if ret[i][j][k] == "na"
-                    ret[i][j][k] = NaN
-                end
-            end
-        end
-    end
     return ret
 end
