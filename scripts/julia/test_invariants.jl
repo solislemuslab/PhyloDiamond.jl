@@ -44,8 +44,15 @@ function main()
     #net = readTopology(network2222)
     #plot(net,:R, showEdgeLength=true)
 
-    sim_with_gene_trees()
+    #sim_with_gene_trees()
     #sim_with_noise()
+    t = ["1", "2", "3", "4", "5", "6", "7", "8"]
+    N = [("1", "2"), ("3", "4"), ("5", "6"), ("7", "8")]
+    network2222 = "((7:1,8:1):4, (((3:1,4:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,6:1):2):1):1);"
+    cf = generate_cf_from_gene_trees("./simulation/sim_trees/estimated_gene_trees_1000/2222_l500_0")
+    path="./simulation/result"
+    df = test_all_possible_nw(t, N, network2222, cf, path)
+    CSV.write(path*"/network2222.csv",  df)
 end
 
 function sim_with_gene_trees()

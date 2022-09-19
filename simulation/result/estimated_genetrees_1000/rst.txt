@@ -1,0 +1,15 @@
+========================================================
+Actual Structure: 12,34,56,78,
+(True network) YES! It is selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 1
+(True network) Invariant difference: 0.0
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 2
+(True network -symmetric) Invariant difference: 0.0006069068605717848
+0.025945833102817943: 12,34,56,78,
+0.026552739963389728: 12,56,34,78,
+0.027155198047867767: 12,34,78,56,
+0.028207474894266317: 12,78,34,56,
+0.03016255537540906: 34,12,56,78,
