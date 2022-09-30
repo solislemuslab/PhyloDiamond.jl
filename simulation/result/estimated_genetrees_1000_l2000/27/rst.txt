@@ -1,0 +1,165 @@
+========================================================
+Actual Structure: 12,34,56,78,
+(True network) YES! It is selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 1
+(True network) Invariant difference: 0.0
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 2
+(True network -symmetric) Invariant difference: 0.00016556792202329987
+0.02103977017821591: 12,34,56,78,
+0.02120533810023921: 12,56,34,78,
+0.021895558341811058: 12,34,78,56,
+0.022121991885795923: 12,78,34,56,
+0.02626208954690702: 12,78,56,34,
+========================================================
+Actual Structure: 12,34,56,7,
+(True network) YES! It is selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 1
+(True network) Invariant difference: 0.0
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 2
+(True network -symmetric) Invariant difference: 1.4249670162343187e-6
+0.018537379193416803: 12,34,56,7,
+0.018538804160433037: 12,56,34,7,
+0.023048894062650493: 12,7,34,56,
+0.02386520621278113: 34,12,56,7,
+0.023891116628875508: 34,56,12,7,
+========================================================
+Actual Structure: 12,34,5,76,
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 3
+(True network -symmetric) Invariant difference: 0.00015955365044586882
+(True network) NO! It is not selected as the top network
+(True network) NO! It is not selected as one of the top 5 networks
+(True network) Rank: 7
+(True network) Invariant difference: 0.0033771807767495853
+0.01474614522318353: 12,67,34,5,
+0.0147461676354394: 12,34,67,5,
+0.014905698873629398: 12,5,34,67,
+0.01790143274767757: 34,12,67,5,
+0.017901526459635064: 34,67,12,5,
+========================================================
+Actual Structure: 12,3,56,74,
+(True network) NO! It is not selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 3
+(True network) Invariant difference: 1.288226067700654e-5
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 5
+(True network -symmetric) Invariant difference: 0.004566611470588462
+0.0333636744037762: 12,56,47,3,
+0.03336369494998672: 12,47,56,3,
+0.03337655666445321: 12,3,56,47,
+0.03524185489023676: 12,3,47,56,
+0.037930285874364665: 12,56,3,47,
+========================================================
+Actual Structure: 1,34,56,72,
+(True network) NO! It is not selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 4
+(True network) Invariant difference: 0.0009042518586417237
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) NO! It is not selected as one of the top 5 networks
+(True network -symmetric) Rank: 13
+(True network -symmetric) Invariant difference: 0.0022878830682723887
+0.012008288337972248: 34,56,27,1,
+0.012008312263638517: 34,27,56,1,
+0.012316409324371141: 34,1,56,27,
+0.012912540196613972: 1,34,56,27,
+0.013028635935017364: 56,34,27,1,
+========================================================
+Actual Structure: 12,34,5,6,
+(True network) YES! It is selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 1
+(True network) Invariant difference: 0.0
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 2
+(True network -symmetric) Invariant difference: 0.0
+0.00932478133561328: 12,34,5,6,
+0.00932478133561328: 12,5,34,6,
+0.009324783289289701: 12,34,6,5,
+0.009324783289289701: 12,6,34,5,
+0.010912773848684046: 34,12,6,5,
+========================================================
+Actual Structure: 12,3,54,6,
+(True network) YES! It is selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 1
+(True network) Invariant difference: 0.0
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 2
+(True network -symmetric) Invariant difference: 1.734723475976807e-18
+0.013095384865718145: 12,3,45,6,
+0.013095384865718146: 12,45,3,6,
+0.013095385729376343: 12,45,6,3,
+0.013095385729376343: 12,6,45,3,
+0.013414631019616338: 12,6,3,45,
+========================================================
+Actual Structure: 12,3,5,46,
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) YES! It is selected as one of the top 5 networks
+(True network -symmetric) Rank: 5
+(True network -symmetric) Invariant difference: 0.00032073347986613307
+(True network) NO! It is not selected as the top network
+(True network) NO! It is not selected as one of the top 5 networks
+(True network) Rank: 6
+(True network) Invariant difference: 0.0003810377649594576
+0.0166428596735264: 12,3,46,5,
+0.0166428596735264: 12,46,3,5,
+0.016642859673547797: 12,46,5,3,
+0.016642859673547797: 12,5,46,3,
+0.016963593153392534: 12,5,3,46,
+========================================================
+Actual Structure: 1,34,56,2,
+(True network) NO! It is not selected as the top network
+(True network) YES! It is selected as one of the top 5 networks
+(True network) Rank: 5
+(True network) Invariant difference: 0.000274865819989048
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) NO! It is not selected as one of the top 5 networks
+(True network -symmetric) Rank: 6
+(True network -symmetric) Invariant difference: 0.0002777537533242211
+0.01013656811806344: 34,1,56,2,
+0.01013656811806344: 34,56,1,2,
+0.010136569131126502: 34,2,56,1,
+0.010136569131126502: 34,56,2,1,
+0.010411433938052488: 1,34,56,2,
+========================================================
+Actual Structure: 1,34,2,56,
+(True network) NO! It is not selected as the top network
+(True network) NO! It is not selected as one of the top 5 networks
+(True network) Rank: 6
+(True network) Invariant difference: 0.0003815633856278384
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) NO! It is not selected as one of the top 5 networks
+(True network -symmetric) Rank: 14
+(True network -symmetric) Invariant difference: 0.001329003171341929
+0.009390070510750224: 34,2,56,1,
+0.009390070510750224: 34,56,2,1,
+0.00939007051113982: 34,1,56,2,
+0.00939007051113982: 34,56,1,2,
+0.0096935565290631: 34,1,2,56,
+========================================================
+Actual Structure: 1,2,34,56,
+(True network -symmetric) NO! It is not selected as the top network
+(True network -symmetric) NO! It is not selected as one of the top 5 networks
+(True network -symmetric) Rank: 11
+(True network -symmetric) Invariant difference: 0.0006833419688475582
+(True network) NO! It is not selected as the top network
+(True network) NO! It is not selected as one of the top 5 networks
+(True network) Rank: 14
+(True network) Invariant difference: 0.0012494063378087105
+0.005464432746449313: 34,1,56,2,
+0.005464432746449313: 34,56,1,2,
+0.005464432751959951: 34,2,56,1,
+0.005464432751959951: 34,56,2,1,
+0.005469915023821177: 34,2,1,56,
