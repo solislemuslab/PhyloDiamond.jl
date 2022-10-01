@@ -1,0 +1,64 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(patchwork)
+```
+
+```{r}
+df = read.csv("./../../simulation/result/rst_all.csv")
+df$nw_type = as.factor(df$nw_type)
+df$sim_type[df$num_genetree==0 & df$len_seq==0] = "cf"
+df$sim_type[df$num_genetree!=0 & df$len_seq==0] = "gene_tree"
+df$sim_type[df$num_genetree!=0 & df$len_seq!=0] = "est_gene_tree"
+df$sim_type = as.factor(df$sim_type)
+```
+
+```{r}
+a1 = df %>%
+  ggplot(mapping = aes(x = nw_type, y = rank_true))+
+    geom_boxplot(aes(col = sim_type))# +
+    #facet_wrap(.~sim_type, scales = "free", nrow = 2)
+
+a2 = df %>%
+  ggplot(mapping = aes(x = nw_type, y = rank_sym))+
+    geom_boxplot(aes(col = sim_type))# +
+    #facet_wrap(.~sim_type, scales = "free", nrow = 2)
+a1/a2
+```
+
+```{r}
+df %>%
+  pivot_longer(c("inv_true", "inv_sym"), names_to = "inv_type", values_to = "inv") %>%
+  ggplot(mapping = aes(x = nw_type, y = inv))+
+    geom_boxplot(aes(col = inv_type)) +
+    facet_wrap(.~sim_type, scales = "free", nrow = 3)
+```
+
+```{r}
+path = "/true_cf"
+nw = c("1122", "1212", "1221", "1222", "2112", "2121",
+       "2122", "2211", "2212", "2221", "2222")
+ret = c()
+nw_rep = c()
+order = c()
+for (i in nw){
+  temp = read.csv(paste("./../../simulation/result", path, "/network", i, ".csv", sep = ""))
+  ret = c(ret, sort(as.numeric(temp[16, -1])))
+  nw_rep = c(nw_rep, rep(i, ncol(temp)-1))
+  order = c(order, (1:(ncol(temp)-1)) * 2520 / (ncol(temp)-1))
+}
+
+df = data.frame(nw = nw_rep, 
+                inv = ret,
+                order = order)
+df$nw = as.factor(df$nw)
+
+ggplot(df, aes(x = order, y = inv))+
+  geom_point(aes(col = nw))
+```
+
