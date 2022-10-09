@@ -46,8 +46,9 @@ function main()
     #sim_with_gene_trees()
     #sim_with_noise()
 
-    #N = [("1", "2"), ("3", "4"), ("5", "6"), ("7", "na")]
-    #test_all_possible_nw(N, generate_cf(N, 0), ".")
+    N = [("1", "2"), ("3", "4"), ("5", "6"), ("7", "8")]
+    
+    #@time test_all_possible_nw(N, cf, ".")
     #generate_cf(N, 0)
    
 end

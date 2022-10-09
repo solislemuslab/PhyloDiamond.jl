@@ -5,83 +5,99 @@ include("./scripts/julia/invariants.jl")
 include("./scripts/julia/test_invariants.jl")
 """
 
-using PhyloNetworks, PhyloPlots, DataFrames, CSV, Statistics, Distributions, Random, DelimitedFiles
+using PhyloNetworks, PhyloPlots, DataFrames, CSV, Statistics, Distributions, Random, DelimitedFiles, Combinatorics
 
 function main()
     path = "."
-    file = open(path*"/rst.txt", "a")
     # list of networks with more than 8 species for testing
-    N_list = [#[("1", "2"), ("3", "4"), ("5", "6"), ("7", "8", "9")],
-              [("1", "2", "9"), ("3", "4"), ("5", "6"), ("7", "8")],
-              [("1", "2"), ("3", "4", "9"), ("5", "6"), ("7", "8")],
-              [("1", "2"), ("3", "4"), ("5", "6", "9"), ("7", "8")],
-              [("1", "na"), ("3", "4"), ("5", "6"), ("7", "8", "9", "2")],
-              [("1", "2"), ("3", "na"), ("5", "6"), ("7", "8", "9", "4")],
-              [("1", "2"), ("3", "4"), ("5", "na"), ("7", "8", "9", "6")],
-              [("1", "2"), ("3", "4", "6"), ("5", "na"), ("7", "8", "9")],
-              [("1", "2", "6"), ("3", "4"), ("5", "na"), ("7", "8", "9")],
-              [("1", "2", "4"), ("3", "na"), ("5", "6"), ("7", "8", "9")]]
-    
-    for N in N_list #iterate through each network for testing
-        write(file, "========================================================\n") 
-        write(file, "Actual Structure: " * N_to_str(N) * "\n")
-        cf = generate_cf(N, 0)
-        rst_net = [] 
-        rst_inv = []
-        t = N_to_t(N)
-
-        sub_all = subnetwork(N) #list of subnetworks with 6, 7, 8 species
-        for temp in sub_all
-            net_all = list_nw(temp) #all possible permutation of the given network
-            df = DataFrame()
-            for i in 1:length(net_all)
-                colname = N_to_str(net_all[i])
-                val = test_invariants(net_all[i], cf)
-                push!(val, mean(filter(!isnan, val)))
-                df[!,colname] = val
-            end
-            insertcols!(df, 1, :row => ["1112","1121","1211","2111","1122","1212","2112","2211","2121","1221","1222","2212", "2122", "2221", "2222", "mean"])
-            
-            inv_mean =Matrix(df)[end,:][2:end]
-            net_all_sorted = net_all[sortperm(inv_mean)]
-
-            write(file, N_to_str(net_all_sorted[1])*": "*string(inv_mean[1])*"\n")
-            push!(rst_inv, inv_mean[1])
-            push!(rst_net, net_all_sorted[1])
-        end
-
-        #find the all the missing species for the subnetwork with smallest invariants
-        order = sortperm(rst_inv)
-        top_t = N_to_t(rst_net[order[1]])
-        mis_species = []
-        for i in t
-            if !(i in top_t)
-                push!(mis_species, i)
-            end
-        end
-
-        #add missing species to the subnetwork with smallest invariants
-        for mis in mis_species
-            flag = false #whether the missing species is found
-            #find the position of the missing species in the next smallest-inv subnetworks
-            for next_net in 2:length(order)
-                for i in 1:4
-                    if mis in rst_net[order[next_net]][i]
-                        push!(rst_net[order[1]][i], mis)
-                        flag = true
-                    end
-                end
-
-                if flag #skip to proceed to the next missing species
-                    break
-                end
-            end
-        end
-        
-        write(file, "SELECTED: " * N_to_str(rst_net[order[1]]) * "\n")
+    N_list = [[("1", "2"), ("3", "4"), ("5", "6"), ("7", "8", "9")], #2223
+    [("1", "na"), ("3", "4"), ("5", "6"), ("7", "8", "9", "2")], #1224
+    [("1", "2"), ("3", "na"), ("5", "6"), ("7", "8", "9", "4")]] #2124
+    N_strc = ["2223", "1224", "2124"]
+    for i in 1:length(N_list)
+        test_all_possible_sub_nw(N_list[i], generate_cf(N_list[i], 0), path, "True concordance factor table")
+        test_all_possible_sub_nw(N_list[i], generate_cf_from_gene_trees("./simulation/sim_trees/100/sim_trees_" *N_strc[i]*"_100_1"),
+        path, N_strc[i]*" True gene tree (100)")
+        test_all_possible_sub_nw(N_list[i], generate_cf_from_gene_trees("./simulation/sim_trees/1000/sim_trees_" *N_strc[i]*"_1000_1"),
+        path, N_strc[i]*" True gene tree (1000)")
+        test_all_possible_sub_nw(N_list[i], generate_cf_from_gene_trees("./simulation/sim_trees/10000/sim_trees_" *N_strc[i]*"_10000_1"),
+        path, N_strc[i]*" True gene tree (10000)")
+        test_all_possible_sub_nw(N_list[i], generate_cf_from_gene_trees("./simulation/sim_trees/estimated_gene_trees_1000/" *N_strc[i]*"_l500_1"),
+        path, N_strc[i]*" Estimated gene tree (1000, l500)")
+        test_all_possible_sub_nw(N_list[i], generate_cf_from_gene_trees("./simulation/sim_trees/estimated_gene_trees_1000/" *N_strc[i]*"_l2000_1"),
+        path, N_strc[i]*" Estimated gene tree (1000, l2000)")
+        test_all_possible_sub_nw(N_list[i], generate_cf_from_gene_trees("./simulation/sim_trees/estimated_gene_trees_10000/" *N_strc[i]*"_l500_1"),
+        path, N_strc[i]*" Estimated gene tree (10000, l500)")
+        test_all_possible_sub_nw(N_list[i], generate_cf_from_gene_trees("./simulation/sim_trees/estimated_gene_trees_10000/" *N_strc[i]*"_l2000_1"),
+        path, N_strc[i]*" Estimated gene tree (10000, l2000)")
     end
-    close(file)
     
+    
+    
+end
+
+function test_all_possible_sub_nw(N, cf, path, message)
+    file = open(path*"/rst.txt", "a")
+    write(file, "========================================================\n") 
+    write(file, message*"\n")
+    write(file, "Actual Structure: " * N_to_str(N) * "\n")
+    rst_net = [] 
+    rst_inv = []
+    t = N_to_t(N)
+
+    sub_all = subnetwork(N) #list of subnetworks with 6, 7, 8 species
+    for temp in sub_all
+        net_all = list_nw(temp) #all possible permutation of the given network
+        df = DataFrame()
+        for i in 1:length(net_all)
+            colname = N_to_str(net_all[i])
+            val = test_invariants(net_all[i], cf)
+            push!(val, mean(filter(!isnan, val)))
+            df[!,colname] = val
+        end
+        insertcols!(df, 1, :row => ["1112","1121","1211","2111","1122","1212","2112","2211","2121","1221","1222","2212", "2122", "2221", "2222", "mean"])
+        
+        inv_mean =Matrix(df)[end,:][2:end]
+        net_all_sorted = net_all[sortperm(inv_mean)]
+
+        #write(file, N_to_str(net_all_sorted[1])*": "*string(inv_mean[1])*"\n")
+        push!(rst_inv, inv_mean[1])
+        push!(rst_net, net_all_sorted[1])
+    end
+
+    #find the all the missing species for the subnetwork with smallest invariants
+    order = sortperm(rst_inv)
+    top_t = N_to_t(rst_net[order[1]])
+    write(file, "Top subnetwork: " * N_to_str(rst_net[order[1]]) * " (" * string(rst_inv[order[1]]) * ")" * "\n")
+    mis_species = []
+    for i in t
+        if !(i in top_t)
+            push!(mis_species, i)
+        end
+    end
+
+    #add missing species to the subnetwork with smallest invariants
+    for mis in mis_species
+        flag = false #whether the missing species is found
+        #find the position of the missing species in the next smallest-inv subnetworks
+        for next_net in 2:length(order)
+            for i in 1:4
+                if mis in rst_net[order[next_net]][i]
+                    write(file, "Missing species " * string(mis) * " from " * N_to_str(rst_net[order[next_net]]) * " (" * string(rst_inv[order[next_net]]) * ")" * "\n")
+                    push!(rst_net[order[1]][i], mis)
+                    flag = true
+                end
+            end
+
+            if flag #skip to proceed to the next missing species
+                break
+            end
+        end
+    end
+
+    write(file, "SELECTED: " * N_to_str(rst_net[order[1]]) * "\n")
+    
+    close(file)
 end
 
 """
