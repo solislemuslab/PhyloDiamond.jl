@@ -258,7 +258,7 @@ function N_to_str(N)
     for n in N
         for j in n
             if j != "na"
-                colname=string(colname, j)
+                colname=string(colname*"-", j)
             end
         end
         colname=string(colname,",")
