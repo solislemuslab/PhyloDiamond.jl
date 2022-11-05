@@ -9,7 +9,7 @@ using PhyloNetworks, PhyloPlots, DataFrames, CSV, Statistics, Distributions, Ran
 
 function main()
     path = "."
-    """
+    
     N_list = [
     [("1", "2"), ("3", "4"), ("5", "6"), ("7", "8","9")],
     [("1", "2","9"), ("3", "4"), ("5", "6"), ("7", "8")],
@@ -21,19 +21,21 @@ function main()
     [("1", "2","10"), ("3", "4"), ("5", "6"), ("7", "8","9")],
     [("1", "2"), ("3", "4","10"), ("5", "6","9"), ("7", "8")],
     [("1", "2","9"), ("3", "4"), ("5", "6","10"), ("7", "8")],
-    [("1", "2","9"), ("3", "4","10"), ("5", "6"), ("7", "8")],
+    [("1", "2","9"), ("3", "4","10"), ("5", "6"), ("7", "8")]#,
 
-    [("1", "2"), ("3", "4"), ("5", "6"), ("7", "8","9","10")],
-    [("1", "2"), ("3", "4"), ("5", "6","9","10"), ("7", "8")],
-    [("1", "2"), ("3", "4","9","10"), ("5", "6"), ("7", "8")],
-    [("1", "2","9","10"), ("3", "4"), ("5", "6"), ("7", "8")],
+    #[("1", "2"), ("3", "4"), ("5", "6"), ("7", "8","9","10")],
+    #[("1", "2"), ("3", "4"), ("5", "6","9","10"), ("7", "8")],
+    #[("1", "2"), ("3", "4","9","10"), ("5", "6"), ("7", "8")],
+    #[("1", "2","9","10"), ("3", "4"), ("5", "6"), ("7", "8")],
     ]
+    N_list = [[("1", "2"), ("3", "4"), ("5", "6"), ("7", "8","9")]]
     for i in 1:length(N_list)
         print(i)
         test_all_possible_sub_nw(N_list[i], generate_cf(N_list[i], 0), path, "True concordance factor table")
+        test_all_possible_sub_nw(N_list[i], generate_cf(N_list[i], 0.0005), path, "Noisy concordance factor table (0.0005)")
     end
     
-    
+    """
     path = "."
     # list of networks with more than 8 species for testing
     N_list = [[("1", "2"), ("3", "4"), ("5", "6"), ("7", "8", "9")]] #2223
@@ -63,7 +65,7 @@ function main()
 end
 
 function test_all_possible_sub_nw(N, cf, path, message)
-    file = open(path*"/rst_dog.txt", "a")
+    file = open(path*"/rst.txt", "a")
     write(file, "========================================================\n") 
     write(file, message*"\n")
     write(file, "Actual Structure: " * N_to_str(N) * "\n")
@@ -94,8 +96,13 @@ function test_all_possible_sub_nw(N, cf, path, message)
                 push!(mis_species, i)
             end
         end
+        if i == 1
+            net = add_mis_species(mis_species, net_all_sorted)
+        else
+            net = add_mis_species(mis_species, net_all_sorted[setdiff(begin:end, i)])
+        end
 
-        net = add_mis_species(mis_species, net_all_sorted[i:end])
+        #net = add_mis_species(mis_species, net_all_sorted[i:end])
         if !(net in rst)
             push!(rst, net)
             write(file, "SELECTED: " * N_to_str(net) * "\n")
@@ -104,30 +111,35 @@ function test_all_possible_sub_nw(N, cf, path, message)
             break
         end
     end
-
-    
     close(file)
 end
 
-"""
-    mis_species = ["9", "10"]
-    net_all_sorted = [[("1", "2"), ("3", "4"), ("5", "6"), ("7", "8")],
-                      [("1", "2"), ("3", "4"), ("5", "6"), ("7", "9")],
-                      [("1", "2"), ("3", "4"), ("5", "6"), ("7", "10")]]
-    add_mis_species(mis_species, net_all_sorted) = [("1", "2"), ("3", "4"), ("5", "6"), ("7", "8", "9", "10")]
-"""
+
 function add_mis_species(mis_species, net_all_sorted)
     #add missing species to the subnetwork with smallest invariants
     rst = net_all_sorted[1]
+    n1 = net_all_sorted[1]
     for mis in mis_species
         flag = false #whether the missing species is found
         #find the position of the missing species in the next smallest-inv subnetworks
         for next_net in 2:length(net_all_sorted)
             for i in 1:4
                 if mis in net_all_sorted[next_net][i]
-                    #write(file, "Missing species " * string(mis) * " from " * N_to_str(rst_net[order[next_net]]) * " (" * string(rst_inv[order[next_net]]) * ")" * "\n")
-                    push!(rst[i], mis)
-                    flag = true
+                    n2 = net_all_sorted[next_net]
+                    if n1[1][1] in n2[1] && n1[1][2] in n2[1] && n1[4][1] in n2[4] && n1[4][2] in n2[4]
+                        if n1[3][1] in n2[2] && n1[3][2] in n2[2] && 
+                            (n2[3][1] in n1[2] || n2[3][2] in n1[2])
+                            push!(rst[2], mis)
+                            flag = true
+                        elseif n1[2][1] in n2[3] && n1[2][2] in n2[3] &&
+                            n2[2][1] in n1[3] || n2[2][2] in n1[3]
+                            push!(rst[3], mis)
+                            flag = true
+                        end
+                    else
+                        push!(rst[i], mis)
+                        flag = true
+                    end
                 end
             end
 
