@@ -1,0 +1,68 @@
+========================================================
+  "Dhole"                            => 7
+  "Grey wolf European (Eurasian)"    => 11
+  "African hunting dog"              => 4
+  "Coyote"                           => 6
+  "Grey wolf Middle Eastern"         => 12
+  "African golden wolf hybrid"       => 2
+  "Golden jackal"                    => 9
+  "AndeanFox"                        => 5
+  "Grey wolf North American"         => 13
+  "Grey wolf Asian (Eurasian)"       => 10
+  "Dog"                              => 8
+  "African golden wolf Northwestern" => 3
+  "African golden wolf Eastern"      => 1
+-3-5,-4-6,-9-11,-7-10,:  (0.03766927659687428)
+-3-5,-9-11,-4-6,-7-10,:  (0.03805585200543463)
+-3-5,-4-6,-7-10,-9-11,:  (0.038442889664850675)
+-3-5,-7-10,-9-11,-4-6,:  (0.03849726532851926)
+-3-5,-7-10,-4-6,-9-11,:  (0.03866839072169954)
+-3-5,-9-11,-7-10,-4-6,:  (0.03898527774404211)
+-9-11,-7-10,-3-5,-4-6,:  (0.05178656673927761)
+-9-11,-3-5,-7-10,-4-6,:  (0.05223312174955439)
+-4-6,-3-5,-9-11,-7-10,:  (0.0530180768175363)
+-4-6,-9-11,-3-5,-7-10,:  (0.05315737476674139)
+SELECTED: -1-12-2-3-5-8,-4-6,-11-9,-10-7,
+SELECTED: -1-12-2-3-5-8,-11-9,-4-6,-10-7,
+SELECTED: -1-12-2-3-5-8,-4-6,-10-7,-11-9,
+African golden wolf Eastern, Grey wolf North American, African golden wolf hybrid, African golden wolf Northwestern, Coyote, Golden jackal
+Dhole, African hunting dog
+Grey wolf Middle Eastern, Grey wolf Asian (Eurasian)
+Grey wolf European (Eurasian), Dog
+========================================================
+  "African golden wolf Eastern"   => 1
+  "Dhole"                         => 3
+  "Golden jackal"                 => 5
+  "African hunting dog"           => 2
+  "Grey wolf European (Eurasian)" => 6
+  "Dog"                           => 4
+0.005274324919928119: -4-6,-1,-2-3,-5,
+0.005274324919928119: -4-6,-2-3,-1,-5,
+0.005274337584792289: -4-6,-2-3,-5,-1,
+0.005274337584792289: -4-6,-5,-2-3,-1,
+0.0055765273736675175: -2-3,-5,-4-6,-1,
+========================================================
+  "African golden wolf Northwestern" => 2
+  "African golden wolf Eastern"      => 1
+  "Dhole"                            => 4
+  "Golden jackal"                    => 6
+  "African hunting dog"              => 3
+  "Grey wolf European (Eurasian)"    => 7
+  "Dog"                              => 5
+0.06402761416721107: -1-5,-2-6,-4,-3,
+0.06402761416721107: -1-5,-4,-2-6,-3,
+0.06402761416788638: -1-5,-2-6,-3,-4,
+0.0640276141678864: -1-5,-3,-2-6,-4,
+0.06402818665975059: -2-6,-1-5,-3,-4,
+========================================================
+  "Dhole"                         => 3
+  "Golden jackal"                 => 5
+  "African hunting dog"           => 1
+  "Coyote"                        => 2
+  "Grey wolf European (Eurasian)" => 6
+  "Dog"                           => 4
+0.005596494278366314: -5,-4-6,-1-3,-2,
+0.005612604540811163: -5,-1-3,-4-6,-2,
+0.0056324509750572535: -5,-1-3,-2,-4-6,
+0.0058479672130674065: -4-6,-2,-1-3,-5,
+0.005847967213067407: -4-6,-1-3,-2,-5,

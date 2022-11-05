@@ -3,7 +3,6 @@ cd("/Users/zhaoxingwu/Desktop/claudia lab/2022 spring phylogenetic/phylo-invaria
 include("./scripts/julia/mapping.jl")
 include("./scripts/julia/invariants.jl")
 include("./scripts/julia/test_invariants.jl")
-include("./scripts/julia/test_more_species.jl")
 """
 
 using PhyloNetworks, PhyloPlots, DataFrames, CSV, Statistics, Distributions, Random, DelimitedFiles, Combinatorics
@@ -30,17 +29,22 @@ function main()
     df_wide = writeTableCF(q,t)
     df = df_wide[:,[:t1, :t2, :t3, :t4, :CF12_34, :CF13_24, :CF14_23]]
     save_object("cf_dog.jld2", df)
-    """
+    
     
     df = load_object("./simulation/sim_trees/dog/cf_dog_merged.jld2")
     tm = DataFrame(CSV.File("./simulation/sim_trees/dog/taxonmap.csv"))
-    df = df[df[:,"t1"].!="AndeanFox",:]
-    df = df[df[:,"t2"].!="AndeanFox",:]
-    df = df[df[:,"t3"].!="AndeanFox",:]
-    df = df[df[:,"t4"].!="AndeanFox",:]
-
     taxon = unique!(tm[:,"species"])
-    deleteat!(taxon, findall(x->x=="AndeanFox",taxon))
+
+    for temp in ["Grey wolf Asian (Eurasian)", "Grey wolf North American", "Grey wolf Middle Eastern",
+        "African golden wolf hybrid", "African golden wolf Northwestern","African golden wolf Eastern",
+        "AndeanFox"]
+        deleteat!(taxon, findall(x->x==temp,taxon))
+        df = df[df[:,"t1"].!=temp,:]
+        df = df[df[:,"t2"].!=temp,:]
+        df = df[df[:,"t3"].!=temp,:]
+        df = df[df[:,"t4"].!=temp,:]
+    end
+    
     value_map = Dict(taxon[i] => i for i in 1:length(taxon))
     for col in ["t1", "t2", "t3", "t4"]
         for i in 1:nrow(df)
@@ -48,9 +52,74 @@ function main()
         end
     end
 
-    test_all_possible_sub_nw([("1", "2", "3"), ("4","5", "6"), ("7", "8", "9"), ("10", "11", "12")], 
-    df, ".", "True concordance factor table")
-    
+
+    test_all_possible_nw([("1", "2"), ("4","3"), ("5", "na"), ("6","na")], 
+    df, ".")
+    """
 end
 
 main()
+
+#@time net0 = snaq!(readTopology("./simulation/sim_trees/dog/start.tree"), readTableCF(df), hmax=1, filename="net0_bucky", seed=123, runs=10)
+
+#creating input file for phylonet
+"""
+tm = DataFrame(CSV.File("./simulation/sim_trees/dog/taxonmap.csv")) #6 species
+    for temp in ["Grey wolf Asian (Eurasian)", "Grey wolf North American", "Grey wolf Middle Eastern",
+        "African golden wolf hybrid", "African golden wolf Northwestern","African golden wolf Eastern",
+        "AndeanFox"]
+        tm = tm[tm[:,"species"].!=temp,:]
+    end
+    tm_dict = Dict(Pair.(tm.individual, tm.species))
+    taxon = unique!(tm[:,"species"])
+    value_map = Dict(taxon[i] => i for i in 1:length(taxon))
+
+    tm_del = DataFrame(CSV.File("./simulation/sim_trees/dog/taxonmap_del.csv")) #species need to be deleted
+    ind_del = tm_del[:, "individual"]
+
+    f = open("./simulation/sim_trees/dog/dogs_estimated_gene_trees.tree", "r")
+    file = open("genetrees.txt", "a")
+    cnt = 0
+    write(file, "#NEXUS\nBEGIN Trees;\n")
+    for line in readlines(f)
+        cnt+=1
+        net = readTopology(line)
+        leaf = []
+        for i in net.leaf
+            push!(leaf, i.name)
+        end
+        #delete species
+        for i in leaf
+            if i in ind_del
+                deleteleaf!(net, i, keeporiginalroot=true)
+            end
+        end
+
+        flag = Dict(Pair.(taxon, false))
+        net_merge = net
+        leaf_del = []
+        leaf = []
+        for i in net.leaf
+            push!(leaf, i.name)
+        end
+        for i in 1:length(leaf)
+            if leaf[i] in tm[:,"individual"]
+                if !flag[tm_dict[leaf[i]]]
+                    flag[tm_dict[leaf[i]]] = true
+                    net_merge.leaf[i].name = string(value_map[tm_dict[leaf[i]]])
+                else
+                    push!(leaf_del, leaf[i])
+                end
+            end
+        end
+        for i in leaf_del
+            deleteleaf!(net_merge, i, keeporiginalroot=true)
+        end
+        if length(net_merge.leaf) > 3
+            write(file, "Tree gt"* string(cnt)* "="* writeTopology(net_merge)*"\n")
+        end
+    end
+    write(file, "END;\nBEGIN PHYLONET;\nInferNetwork_MPL (all) 1 -x 1 -pl 1;\nEND;")
+    close(f)
+    close(file)
+"""
