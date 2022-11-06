@@ -12,10 +12,94 @@ library(patchwork)
 ```{r}
 df = read.csv("./../../simulation/result/rst_all.csv")
 df$nw_type = as.factor(df$nw_type)
-df$sim_type[df$num_genetree==0 & df$len_seq==0] = "cf"
+df$sim_type[df$num_genetree==0 & df$len_seq==0 & df$sd == 0] = "cf"
+df$sim_type[df$num_genetree==0 & df$len_seq==0 & df$sd != 0] = "cf_noise"
 df$sim_type[df$num_genetree!=0 & df$len_seq==0] = "gene_tree"
 df$sim_type[df$num_genetree!=0 & df$len_seq!=0] = "est_gene_tree"
 df$sim_type = as.factor(df$sim_type)
+```
+
+
+
+```{r}
+df %>%
+  pivot_longer(c("inv_true", "inv_sym"), names_to = "inv_type", values_to = "inv") %>%
+  ggplot(mapping = aes(x = nw_type, y = inv))+
+  geom_boxplot(aes(col = inv_type)) +
+  facet_wrap(.~sim_type, scales = "free", nrow = 2,
+             labeller = labeller(sim_type = 
+                                     c("cf" = "True concordance factors",
+                                       "cf_noise" = "Noisy concordance factors",
+                                       "est_gene_tree" = "Estimated gene trees", 
+                                       "gene_tree" = "Gene trees")))+
+  labs(x = "Network Structures", y = "Invariant Scores")+
+  scale_colour_manual('Type', 
+                      labels=c('Symmetrical network', 'True network'), 
+                      values=c('#43CD80','#3A5FCD'))+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 65, vjust = 0.5),
+        legend.position = "top")
+
+
+df %>%
+  pivot_longer(c("rank_true", "rank_sym"), names_to = "rank_type", values_to = "rank") %>%
+  ggplot(mapping = aes(x = nw_type, y = rank))+
+  geom_boxplot(aes(col = rank_type)) +
+  facet_wrap(.~sim_type, nrow = 2,
+             labeller = labeller(sim_type = 
+                                 c("cf" = "True concordance factors",
+                                       "cf_noise" = "Noisy concordance factors",
+                                       "est_gene_tree" = "Estimated gene trees", 
+                                       "gene_tree" = "Gene trees")))+
+  labs(x = "Network Structures", y = "Ranks")+
+  scale_colour_manual('Type', 
+                      labels=c('Symmetrical network', 'True network'), 
+                      values=c('#43CD80','#3A5FCD'))+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 65, vjust = 0.5),
+        legend.position = "top") 
+
+```
+
+```{r}
+df$label[df$rank_sym<=5 & df$rank_true<=5] = "sym_true"
+df$label[df$rank_true<=5 & df$rank_sym>5] = "true"
+df$label[df$rank_sym<=5 & df$rank_true>5] = "sym"
+df$label[df$rank_sym>5 & df$rank_true>5] = "other"
+
+png("1.png", width = 8, height = 6, units = 'in', res = 300)
+df %>%
+  ggplot(aes(fill=label, x=nw_type)) + 
+  geom_bar()+
+  facet_wrap(.~sim_type, scales = "free", nrow = 2,
+             labeller = labeller(sim_type = 
+                                 c("cf" = "True concordance factors",
+                                       "cf_noise" = "Noisy concordance factors",
+                                       "est_gene_tree" = "Estimated gene trees", 
+                                       "gene_tree" = "Gene trees")))+
+  labs(x = "Network Structures", y = "Counts")+
+  scale_fill_manual('Types of top 5 networks', 
+                      labels=c('Other', 'Symmetrical network', 
+                               'Both symmetrical and true networks', 'True network'), 
+                      values=c('#CDC5BF', '#43CD80', '#EE8262', '#3A5FCD'))+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 65, vjust = 0.5),
+        legend.position = "top") 
+dev.off()
+```
+
+
+
+```{r}
+df$label[df$rank_true==1] = "true"
+df$label[df$rank_sym==1] = "sym"
+df$label[df$rank_sym!=1 & df$rank_true!=1] = "other"
+
+df %>%
+  ggplot(aes(fill=label, x=nw_type)) + 
+  geom_bar()+
+  facet_wrap(.~sim_type, scales = "free", nrow = 2)+
+    theme(axis.text.x = element_text(angle = 65, vjust = 0.5))  
 ```
 
 ```{r}
@@ -31,13 +115,6 @@ a2 = df %>%
 a1/a2
 ```
 
-```{r}
-df %>%
-  pivot_longer(c("inv_true", "inv_sym"), names_to = "inv_type", values_to = "inv") %>%
-  ggplot(mapping = aes(x = nw_type, y = inv))+
-    geom_boxplot(aes(col = inv_type)) +
-    facet_wrap(.~sim_type, scales = "free", nrow = 3)
-```
 
 ```{r}
 path = "/true_cf"
