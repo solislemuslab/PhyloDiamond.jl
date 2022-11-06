@@ -10,6 +10,9 @@ using PhyloNetworks, PhyloPlots, DataFrames, CSV, Statistics, Distributions, Ran
 function main()
     path = "."
     
+    test_all_possible_sub_nw([("1", "2"), ("3", "4"), ("5", "6"), ("7", "8","9")], generate_cf_from_gene_trees("./simulation/sim_trees/estimated_gene_trees_1000/" *"2223"*"_l500_1"),
+        path, "2223"*" Estimated gene tree (1000, l500)")
+    """
     N_list = [
     [("1", "2"), ("3", "4"), ("5", "6"), ("7", "8","9")],
     [("1", "2","9"), ("3", "4"), ("5", "6"), ("7", "8")],
@@ -34,7 +37,7 @@ function main()
         test_all_possible_sub_nw(N_list[i], generate_cf(N_list[i], 0), path, "True concordance factor table")
         test_all_possible_sub_nw(N_list[i], generate_cf(N_list[i], 0.0005), path, "Noisy concordance factor table (0.0005)")
     end
-    
+    """
     """
     path = "."
     # list of networks with more than 8 species for testing
@@ -96,13 +99,16 @@ function test_all_possible_sub_nw(N, cf, path, message)
                 push!(mis_species, i)
             end
         end
+
+        """ when selecting other top networks, include the first network information
         if i == 1
             net = add_mis_species(mis_species, net_all_sorted)
         else
             net = add_mis_species(mis_species, net_all_sorted[setdiff(begin:end, i)])
         end
+        """
 
-        #net = add_mis_species(mis_species, net_all_sorted[i:end])
+        net = add_mis_species(mis_species, net_all_sorted[i:end]) #when selecting other top networks, remove the first few network information
         if !(net in rst)
             push!(rst, net)
             write(file, "SELECTED: " * N_to_str(net) * "\n")
