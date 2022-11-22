@@ -1,5 +1,5 @@
 ---
-title: "R Notebook"
+title: "Final plots for Wu and Solis-Lemus (2022)"
 output: html_notebook
 ---
 
@@ -7,10 +7,11 @@ output: html_notebook
 library(ggplot2)
 library(tidyverse)
 library(patchwork)
+library(RColorBrewer) ## https://r-graph-gallery.com/38-rcolorbrewers-palettes.html?
 ```
 
 ```{r}
-df = read.csv("./../../simulation/result/rst_all.csv")
+df = read.csv("../../simulation/result/rst_all.csv") ##downloaded from google drive
 df$nw_type = as.factor(df$nw_type)
 df$sim_type[df$num_genetree==0 & df$len_seq==0 & df$sd == 0] = "cf"
 df$sim_type[df$num_genetree==0 & df$len_seq==0 & df$sd != 0] = "cf_noise"
@@ -20,29 +21,67 @@ df$sim_type = as.factor(df$sim_type)
 ```
 
 
-
+Figure for invariant score:
 ```{r}
-df %>%
-  pivot_longer(c("inv_true", "inv_sym"), names_to = "inv_type", values_to = "inv") %>%
+
+## need to put sim_type in different order:
+df$sim_type = factor(df$sim_type, levels=c("cf", "cf_noise", "gene_tree", "est_gene_tree"))
+
+df2 = df %>%
+  pivot_longer(c("inv_true", "inv_sym"), names_to = "inv_type", values_to = "inv") 
+
+## put in right order:
+df2$inv_type = factor(df2$inv_type)
+df2$inv_type = factor(df2$inv_type, levels=c("inv_true", "inv_sym"))
+
+# Note that I need to copy and paste into the R REPL rather than run through RStudio
+# for the PDF to be saved:
+pdf("../../ms/figures/invariant-score.pdf", width = 8, height = 7)
+
+df2 %>%
   ggplot(mapping = aes(x = nw_type, y = inv))+
   geom_boxplot(aes(col = inv_type)) +
-  facet_wrap(.~sim_type, scales = "free", nrow = 2,
+  facet_wrap(.~sim_type, #scales = "free_y", 
+             nrow = 2,
              labeller = labeller(sim_type = 
                                      c("cf" = "True concordance factors",
                                        "cf_noise" = "Noisy concordance factors",
                                        "est_gene_tree" = "Estimated gene trees", 
-                                       "gene_tree" = "Gene trees")))+
-  labs(x = "Network Structures", y = "Invariant Scores")+
-  scale_colour_manual('Type', 
-                      labels=c('Symmetrical network', 'True network'), 
-                      values=c('#43CD80','#3A5FCD'))+
+                                       "gene_tree" = "True gene trees")))+
+  labs(x = "", y = "Invariant Score")+
+  #scale_colour_manual('', 
+  #                    labels=c('True', 'Symmetric'), 
+  #                    values=c('#43CD80','#3A5FCD'))+
+  scale_colour_brewer('', 
+                      labels=c('True', 'Symmetric'), 
+                      palette="Set1")+
   theme_bw()+
-  theme(axis.text.x = element_text(angle = 65, vjust = 0.5),
-        legend.position = "top")
+  theme(panel.grid = element_blank(), 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, size=12),
+        axis.text.y = element_text(size=12),
+        axis.title.y = element_text(size=12),
+        legend.position = "top",
+        strip.background =element_rect(fill="gray95"),
+        strip.text.x = element_text(size = 12),
+        legend.text=element_text(size=12))
 
+dev.off()
+```
 
-df %>%
-  pivot_longer(c("rank_true", "rank_sym"), names_to = "rank_type", values_to = "rank") %>%
+Figure of rank:
+```{r}
+df3 = df %>%
+  pivot_longer(c("rank_true", "rank_sym"), names_to = "rank_type", values_to = "rank")
+  
+## put in right order:
+df3$rank_type = factor(df3$rank_type)
+df3$rank_type = factor(df3$rank_type, levels=c("rank_true", "rank_sym"))
+
+# Note that I need to copy and paste into the R REPL rather than run through RStudio
+# for the PDF to be saved:
+pdf("../../ms/figures/rank.pdf", width = 8, height = 7)
+
+df3 %>%
   ggplot(mapping = aes(x = nw_type, y = rank))+
   geom_boxplot(aes(col = rank_type)) +
   facet_wrap(.~sim_type, nrow = 2,
@@ -50,45 +89,80 @@ df %>%
                                  c("cf" = "True concordance factors",
                                        "cf_noise" = "Noisy concordance factors",
                                        "est_gene_tree" = "Estimated gene trees", 
-                                       "gene_tree" = "Gene trees")))+
-  labs(x = "Network Structures", y = "Ranks")+
-  scale_colour_manual('Type', 
-                      labels=c('Symmetrical network', 'True network'), 
-                      values=c('#43CD80','#3A5FCD'))+
+                                       "gene_tree" = "True gene trees")))+
+  labs(x = "", y = "Rank")+
+  #scale_colour_manual('', 
+  #                    labels=c('True', 'Symmetric'), 
+  #                    values=c('#43CD80','#3A5FCD'))+
+  scale_colour_brewer('', 
+                      labels=c('True', 'Symmetric'), 
+                      palette="Set1")+
   theme_bw()+
-  theme(axis.text.x = element_text(angle = 65, vjust = 0.5),
-        legend.position = "top") 
+  theme(panel.grid = element_blank(), 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, size=12),
+        axis.text.y = element_text(size=12),
+        axis.title.y = element_text(size=12),
+        legend.position = "top",
+        strip.background =element_rect(fill="gray95"),
+        strip.text.x = element_text(size = 12),
+        legend.text=element_text(size=12)) 
+
+dev.off()
 
 ```
 
+
+Figure with the top 5:
 ```{r}
 df$label[df$rank_sym<=5 & df$rank_true<=5] = "sym_true"
 df$label[df$rank_true<=5 & df$rank_sym>5] = "true"
 df$label[df$rank_sym<=5 & df$rank_true>5] = "sym"
 df$label[df$rank_sym>5 & df$rank_true>5] = "other"
 
-png("1.png", width = 8, height = 6, units = 'in', res = 300)
+## label is chr, and we need it as factor and in correct order:
+str(df)
+df$label = factor(df$label)
+df$label = factor(df$label, levels = c("sym_true","true","sym","other"))
+
+## need to put sim_type in different order:
+df$sim_type = factor(df$sim_type, levels=c("cf", "cf_noise", "gene_tree", "est_gene_tree"))
+
+#png("1.png", width = 8, height = 6, units = 'in', res = 300)
+# Note that I need to copy and paste into the R REPL rather than run through RStudio
+# for the PDF to be saved:
+pdf("../../ms/figures/top5.pdf", width = 8, height = 7)
+
 df %>%
   ggplot(aes(fill=label, x=nw_type)) + 
-  geom_bar()+
-  facet_wrap(.~sim_type, scales = "free", nrow = 2,
+  #geom_bar()+
+  geom_bar(aes(y = (..count..)/sum(..count..)))+
+  facet_wrap(.~sim_type, scales = "free_y", nrow = 2,
              labeller = labeller(sim_type = 
                                  c("cf" = "True concordance factors",
                                        "cf_noise" = "Noisy concordance factors",
                                        "est_gene_tree" = "Estimated gene trees", 
-                                       "gene_tree" = "Gene trees")))+
-  labs(x = "Network Structures", y = "Counts")+
-  scale_fill_manual('Types of top 5 networks', 
-                      labels=c('Other', 'Symmetrical network', 
-                               'Both symmetrical and true networks', 'True network'), 
-                      values=c('#CDC5BF', '#43CD80', '#EE8262', '#3A5FCD'))+
+                                       "gene_tree" = "True gene trees")))+
+  labs(x = "", y = "")+
+  #scale_fill_manual('Types of top 5 networks', 
+  #                    labels=c('Other', 'Symmetrical network', 
+  #                             'Both symmetrical and true networks', 'True network'), 
+  #                    values=c('#CDC5BF', '#43CD80', '#EE8262', '#3A5FCD'))+
+  scale_fill_brewer('',labels=c('True and Symmetric', 'True', 'Symmetric','Other'), 
+                      palette = "PuBuGn", direction=-1)+
   theme_bw()+
-  theme(axis.text.x = element_text(angle = 65, vjust = 0.5),
-        legend.position = "top") 
+  theme(panel.grid = element_blank(), 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, size=12),
+        legend.position = "top",
+        strip.background =element_rect(fill="gray95"),
+        strip.text.x = element_text(size = 12),
+        axis.text.y=element_blank(),
+        legend.text=element_text(size=12)) 
+
 dev.off()
 ```
 
 
+# Old plots; not used in the manuscript anymore
 
 ```{r}
 df$label[df$rank_true==1] = "true"
