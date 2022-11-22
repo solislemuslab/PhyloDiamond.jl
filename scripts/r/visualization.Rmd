@@ -162,6 +162,53 @@ dev.off()
 ```
 
 
+Figure Top 1:
+```{r}
+df$label[df$rank_true==1] = "true"
+df$label[df$rank_sym==1] = "sym"
+df$label[df$rank_sym!=1 & df$rank_true!=1] = "other"
+
+## label is chr, and we need it as factor and in correct order:
+str(df)
+df$label = factor(df$label)
+df$label = factor(df$label, levels = c("true","sym","other"))
+
+## need to put sim_type in different order:
+df$sim_type = factor(df$sim_type, levels=c("cf", "cf_noise", "gene_tree", "est_gene_tree"))
+
+# Note that I need to copy and paste into the R REPL rather than run through RStudio
+# for the PDF to be saved:
+pdf("../../ms/figures/top1.pdf", width = 8, height = 7)
+
+df %>%
+  ggplot(aes(fill=label, x=nw_type)) + 
+  geom_bar()+
+  facet_wrap(.~sim_type, scales = "free_y", nrow = 2,
+             labeller = labeller(sim_type = 
+                                 c("cf" = "True concordance factors",
+                                       "cf_noise" = "Noisy concordance factors",
+                                       "est_gene_tree" = "Estimated gene trees", 
+                                       "gene_tree" = "True gene trees")))+
+  labs(x = "", y = "")+
+  #scale_fill_manual('', 
+  #                    labels=c('Other', 'Symmetrical network', 
+  #                              'True network'), 
+  #                    values=c('#CDC5BF', '#43CD80',  '#3A5FCD'))+
+  scale_fill_brewer('',labels=c('True', 'Symmetric','Other'), 
+                      palette = "PuBuGn", direction=-1)+
+  theme_bw()+
+  theme(panel.grid = element_blank(), 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, size=12),
+        legend.position = "top",
+        strip.background =element_rect(fill="gray95"),
+        strip.text.x = element_text(size = 12),
+        axis.text.y=element_blank(),
+        legend.text=element_text(size=12)) 
+
+dev.off()
+```
+
+
 # Old plots; not used in the manuscript anymore
 
 ```{r}
