@@ -21,9 +21,8 @@ df$sim_type = as.factor(df$sim_type)
 ```
 
 
-Figure for invariant score:
+# Figure for invariant score
 ```{r}
-
 ## need to put sim_type in different order:
 df$sim_type = factor(df$sim_type, levels=c("cf", "cf_noise", "gene_tree", "est_gene_tree"))
 
@@ -33,21 +32,123 @@ df2 = df %>%
 ## put in right order:
 df2$inv_type = factor(df2$inv_type)
 df2$inv_type = factor(df2$inv_type, levels=c("inv_true", "inv_sym"))
+```
+
+## True CF and Noisy CF
+
+```{r}
+df3 = df2[df2$sim_type %in% c("cf","cf_noise"),]
+
+df3$sim_type2 = "cf"
+df3$sim_type2[df3$sim_type == "cf_noise" & df3$sd == 0.000005] = "cf_noise1"
+df3$sim_type2[df3$sim_type == "cf_noise" & df3$sd == 0.00005] = "cf_noise2"
+df3$sim_type2[df3$sim_type == "cf_noise" & df3$sd == 0.0005] = "cf_noise3"
+df3$sim_type2 = factor(df3$sim_type2) 
 
 # Note that I need to copy and paste into the R REPL rather than run through RStudio
 # for the PDF to be saved:
-pdf("../../ms/figures/invariant-score.pdf", width = 8, height = 7)
+pdf("../../ms/figures/invariant-score-true-noisy.pdf", width = 8, height = 4)
 
-df2 %>%
+df3 %>%
   ggplot(mapping = aes(x = nw_type, y = inv))+
   geom_boxplot(aes(col = inv_type)) +
-  facet_wrap(.~sim_type, #scales = "free_y", 
-             nrow = 2,
-             labeller = labeller(sim_type = 
-                                     c("cf" = "True concordance factors",
-                                       "cf_noise" = "Noisy concordance factors",
-                                       "est_gene_tree" = "Estimated gene trees", 
-                                       "gene_tree" = "True gene trees")))+
+  facet_wrap(.~sim_type2, #scales = "free_y", 
+             nrow = 1,
+             labeller = labeller(sim_type2 = 
+                                     c("cf" = "True CF",
+                                       "cf_noise1" = "Noisy CF (sd=5e-6)",
+                                       "cf_noise2" = "Noisy CF (sd=5e-5)",
+                                       "cf_noise3" = "Noisy CF (sd=5e-4)")))+
+  labs(x = "", y = "Invariant Score")+
+  #scale_colour_manual('', 
+  #                    labels=c('True', 'Symmetric'), 
+  #                    values=c('#43CD80','#3A5FCD'))+
+  scale_colour_brewer('', 
+                      labels=c('True', 'Symmetric'), 
+                      palette="Set1")+
+  theme_bw()+
+  theme(panel.grid = element_blank(), 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, size=12),
+        axis.text.y = element_text(size=12),
+        axis.title.y = element_text(size=12),
+        legend.position = "top",
+        strip.background =element_rect(fill="gray95"),
+        strip.text.x = element_text(size = 12),
+        legend.text=element_text(size=12))
+
+dev.off()
+```
+## True gene trees
+
+```{r}
+df3 = df2[df2$sim_type == "gene_tree",]
+
+df3$sim_type2 = "gene_tree"
+df3$sim_type2[df3$num_genetree == 100] = "gene_tree1"
+df3$sim_type2[df3$num_genetree == 1000] = "gene_tree2"
+df3$sim_type2[df3$num_genetree == 10000] = "gene_tree3"
+df3$sim_type2 = factor(df3$sim_type2) 
+
+# Note that I need to copy and paste into the R REPL rather than run through RStudio
+# for the PDF to be saved:
+pdf("../../ms/figures/invariant-score-true-gt.pdf", width = 8, height = 4)
+
+df3 %>%
+  ggplot(mapping = aes(x = nw_type, y = inv))+
+  geom_boxplot(aes(col = inv_type)) +
+  facet_wrap(.~sim_type2, #scales = "free_y", 
+             nrow = 1,
+             labeller = labeller(sim_type2 = 
+                                     c("gene_tree1" = "True g.t. (100)",
+                                       "gene_tree2" = "True g.t. (1000)",
+                                       "gene_tree3" = "True g.t. (10000)")))+
+  labs(x = "", y = "Invariant Score")+
+  #scale_colour_manual('', 
+  #                    labels=c('True', 'Symmetric'), 
+  #                    values=c('#43CD80','#3A5FCD'))+
+  scale_colour_brewer('', 
+                      labels=c('True', 'Symmetric'), 
+                      palette="Set1")+
+  theme_bw()+
+  theme(panel.grid = element_blank(), 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, size=12),
+        axis.text.y = element_text(size=12),
+        axis.title.y = element_text(size=12),
+        legend.position = "top",
+        strip.background =element_rect(fill="gray95"),
+        strip.text.x = element_text(size = 12),
+        legend.text=element_text(size=12))
+
+dev.off()
+```
+## Estimated gene trees
+
+```{r}
+df3 = df2[df2$sim_type == "est_gene_tree",]
+
+df3$sim_type2 = "est_gene_tree"
+#df3$sim_type2[df3$num_genetree == 100 & df3$len_seq == 500] = "est_gene_tree1"
+df3$sim_type2[df3$num_genetree == 1000 & df3$len_seq == 500] = "est_gene_tree2"
+df3$sim_type2[df3$num_genetree == 10000 & df3$len_seq == 500] = "est_gene_tree3"
+#df3$sim_type2[df3$num_genetree == 100 & df3$len_seq == 2000] = "est_gene_tree4"
+df3$sim_type2[df3$num_genetree == 1000 & df3$len_seq == 2000] = "est_gene_tree5"
+df3$sim_type2[df3$num_genetree == 10000 & df3$len_seq == 2000] = "est_gene_tree6"
+df3$sim_type2 = factor(df3$sim_type2) 
+
+# Note that I need to copy and paste into the R REPL rather than run through RStudio
+# for the PDF to be saved:
+pdf("../../ms/figures/invariant-score-est-gt.pdf", width = 8, height = 4)
+
+df3 %>%
+  ggplot(mapping = aes(x = nw_type, y = inv))+
+  geom_boxplot(aes(col = inv_type)) +
+  facet_wrap(.~sim_type2, #scales = "free_y", 
+             nrow = 1,
+             labeller = labeller(sim_type2 = 
+                                     c("est_gene_tree2" = "gt=1000, L=500",
+                                       "est_gene_tree3" = "gt=10000, L=500",
+                                       "est_gene_tree5" = "gt=1000, L=2000",
+                                       "est_gene_tree6" = "gt=10000, L=2000")))+
   labs(x = "", y = "Invariant Score")+
   #scale_colour_manual('', 
   #                    labels=c('True', 'Symmetric'), 
@@ -68,7 +169,7 @@ df2 %>%
 dev.off()
 ```
 
-Figure of rank:
+# Figure of rank
 ```{r}
 df3 = df %>%
   pivot_longer(c("rank_true", "rank_sym"), names_to = "rank_type", values_to = "rank")
@@ -76,20 +177,34 @@ df3 = df %>%
 ## put in right order:
 df3$rank_type = factor(df3$rank_type)
 df3$rank_type = factor(df3$rank_type, levels=c("rank_true", "rank_sym"))
+```
+
+
+## True and noisy cf
+```{r}
+df4 = df3[df3$sim_type %in% c("cf","cf_noise"),]
+
+df4$sim_type2 = "cf"
+df4$sim_type2[df4$sim_type == "cf_noise" & df4$sd == 0.000005] = "cf_noise1"
+df4$sim_type2[df4$sim_type == "cf_noise" & df4$sd == 0.00005] = "cf_noise2"
+df4$sim_type2[df4$sim_type == "cf_noise" & df4$sd == 0.0005] = "cf_noise3"
+df4$sim_type2 = factor(df4$sim_type2) 
 
 # Note that I need to copy and paste into the R REPL rather than run through RStudio
 # for the PDF to be saved:
-pdf("../../ms/figures/rank.pdf", width = 8, height = 7)
+pdf("../../ms/figures/rank-true-noisy-cf.pdf", width = 8, height = 4)
 
-df3 %>%
+df4 %>%
   ggplot(mapping = aes(x = nw_type, y = rank))+
   geom_boxplot(aes(col = rank_type)) +
-  facet_wrap(.~sim_type, nrow = 2,
-             labeller = labeller(sim_type = 
-                                 c("cf" = "True concordance factors",
-                                       "cf_noise" = "Noisy concordance factors",
-                                       "est_gene_tree" = "Estimated gene trees", 
-                                       "gene_tree" = "True gene trees")))+
+  geom_hline(yintercept=5, linetype="dashed", color = "grey") +
+  facet_wrap(.~sim_type2, #scales = "free_y", 
+             nrow = 1,
+             labeller = labeller(sim_type2 = 
+                                     c("cf" = "True CF",
+                                       "cf_noise1" = "Noisy CF (sd=5e-6)",
+                                       "cf_noise2" = "Noisy CF (sd=5e-5)",
+                                       "cf_noise3" = "Noisy CF (sd=5e-4)")))+
   labs(x = "", y = "Rank")+
   #scale_colour_manual('', 
   #                    labels=c('True', 'Symmetric'), 
@@ -108,11 +223,100 @@ df3 %>%
         legend.text=element_text(size=12)) 
 
 dev.off()
+```
+## True gene trees
+```{r}
+df4 = df3[df3$sim_type == "gene_tree",]
 
+df4$sim_type2 = "gene_tree"
+df4$sim_type2[df4$num_genetree == 100] = "gene_tree1"
+df4$sim_type2[df4$num_genetree == 1000] = "gene_tree2"
+df4$sim_type2[df4$num_genetree == 10000] = "gene_tree3"
+df4$sim_type2 = factor(df4$sim_type2) 
+
+# Note that I need to copy and paste into the R REPL rather than run through RStudio
+# for the PDF to be saved:
+pdf("../../ms/figures/rank-true-gt.pdf", width = 8, height = 4)
+
+df4 %>%
+  ggplot(mapping = aes(x = nw_type, y = rank))+
+  geom_boxplot(aes(col = rank_type)) +
+  geom_hline(yintercept=5, linetype="dashed", color = "grey") +
+  facet_wrap(.~sim_type2, #scales = "free_y", 
+             nrow = 1,
+             labeller = labeller(sim_type2 = 
+                                     c("gene_tree1" = "True g.t. (100)",
+                                       "gene_tree2" = "True g.t. (1000)",
+                                       "gene_tree3" = "True g.t. (10000)")))+
+  labs(x = "", y = "Rank")+
+  #scale_colour_manual('', 
+  #                    labels=c('True', 'Symmetric'), 
+  #                    values=c('#43CD80','#3A5FCD'))+
+  scale_colour_brewer('', 
+                      labels=c('True', 'Symmetric'), 
+                      palette="Set1")+
+  theme_bw()+
+  theme(panel.grid = element_blank(), 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, size=12),
+        axis.text.y = element_text(size=12),
+        axis.title.y = element_text(size=12),
+        legend.position = "top",
+        strip.background =element_rect(fill="gray95"),
+        strip.text.x = element_text(size = 12),
+        legend.text=element_text(size=12)) 
+
+dev.off()
+```
+
+## Estimated gene trees
+```{r}
+df4 = df3[df3$sim_type == "est_gene_tree",]
+
+df4$sim_type2 = "est_gene_tree"
+df4$sim_type2[df4$num_genetree == 1000 & df4$len_seq == 500] = "est_gene_tree2"
+df4$sim_type2[df4$num_genetree == 10000 & df4$len_seq == 500] = "est_gene_tree3"
+df4$sim_type2[df4$num_genetree == 1000 & df4$len_seq == 2000] = "est_gene_tree5"
+df4$sim_type2[df4$num_genetree == 10000 & df4$len_seq == 2000] = "est_gene_tree6"
+df4$sim_type2 = factor(df4$sim_type2) 
+
+# Note that I need to copy and paste into the R REPL rather than run through RStudio
+# for the PDF to be saved:
+pdf("../../ms/figures/rank-est-gt.pdf", width = 8, height = 4)
+
+df4 %>%
+  ggplot(mapping = aes(x = nw_type, y = rank))+
+  geom_boxplot(aes(col = rank_type)) +
+  geom_hline(yintercept=5, linetype="dashed", color = "grey") +
+  facet_wrap(.~sim_type2, #scales = "free_y", 
+             nrow = 1,
+             labeller = labeller(sim_type2 = 
+                                     c("est_gene_tree2" = "gt=1000, L=500",
+                                       "est_gene_tree3" = "gt=10000, L=500",
+                                       "est_gene_tree5" = "gt=1000, L=2000",
+                                       "est_gene_tree6" = "gt=10000, L=2000")))+
+  labs(x = "", y = "Rank")+
+  #scale_colour_manual('', 
+  #                    labels=c('True', 'Symmetric'), 
+  #                    values=c('#43CD80','#3A5FCD'))+
+  scale_colour_brewer('', 
+                      labels=c('True', 'Symmetric'), 
+                      palette="Set1")+
+  theme_bw()+
+  theme(panel.grid = element_blank(), 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, size=12),
+        axis.text.y = element_text(size=12),
+        axis.title.y = element_text(size=12),
+        legend.position = "top",
+        strip.background =element_rect(fill="gray95"),
+        strip.text.x = element_text(size = 12),
+        legend.text=element_text(size=12)) 
+
+dev.off()
 ```
 
 
-Figure with the top 5:
+# Figure with the top 5
+
 ```{r}
 df$label[df$rank_sym<=5 & df$rank_true<=5] = "sym_true"
 df$label[df$rank_true<=5 & df$rank_sym>5] = "true"
@@ -126,22 +330,129 @@ df$label = factor(df$label, levels = c("sym_true","true","sym","other"))
 
 ## need to put sim_type in different order:
 df$sim_type = factor(df$sim_type, levels=c("cf", "cf_noise", "gene_tree", "est_gene_tree"))
+```
+
+## True and noisy CF
+
+
+```{r}
+df2 = df[df$sim_type %in% c("cf","cf_noise"),]
+
+df2$sim_type2 = "cf"
+df2$sim_type2[df2$sim_type == "cf_noise" & df2$sd == 0.000005] = "cf_noise1"
+df2$sim_type2[df2$sim_type == "cf_noise" & df2$sd == 0.00005] = "cf_noise2"
+df2$sim_type2[df2$sim_type == "cf_noise" & df2$sd == 0.0005] = "cf_noise3"
+df2$sim_type2 = factor(df2$sim_type2) 
 
 #png("1.png", width = 8, height = 6, units = 'in', res = 300)
 # Note that I need to copy and paste into the R REPL rather than run through RStudio
 # for the PDF to be saved:
-pdf("../../ms/figures/top5.pdf", width = 8, height = 7)
+pdf("../../ms/figures/top5-true-noisy-cf.pdf", width = 8, height = 4)
 
-df %>%
+df2 %>%
   ggplot(aes(fill=label, x=nw_type)) + 
   #geom_bar()+
   geom_bar(aes(y = (..count..)/sum(..count..)))+
-  facet_wrap(.~sim_type, scales = "free_y", nrow = 2,
-             labeller = labeller(sim_type = 
-                                 c("cf" = "True concordance factors",
-                                       "cf_noise" = "Noisy concordance factors",
-                                       "est_gene_tree" = "Estimated gene trees", 
-                                       "gene_tree" = "True gene trees")))+
+    facet_wrap(.~sim_type2, scales = "free_y", 
+             nrow = 1,
+             labeller = labeller(sim_type2 = 
+                                     c("cf" = "True CF",
+                                       "cf_noise1" = "Noisy CF (sd=5e-6)",
+                                       "cf_noise2" = "Noisy CF (sd=5e-5)",
+                                       "cf_noise3" = "Noisy CF (sd=5e-4)")))+
+  labs(x = "", y = "")+
+  #scale_fill_manual('Types of top 5 networks', 
+  #                    labels=c('Other', 'Symmetrical network', 
+  #                             'Both symmetrical and true networks', 'True network'), 
+  #                    values=c('#CDC5BF', '#43CD80', '#EE8262', '#3A5FCD'))+
+  scale_fill_brewer('',labels=c('True and Symmetric', 'True', 'Symmetric','Other'), 
+                      palette = "PuBuGn", direction=-1)+
+  theme_bw()+
+  theme(panel.grid = element_blank(), 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, size=12),
+        legend.position = "top",
+        strip.background =element_rect(fill="gray95"),
+        strip.text.x = element_text(size = 12),
+        axis.text.y=element_blank(),
+        legend.text=element_text(size=12)) 
+
+dev.off()
+```
+## True gene trees
+
+
+```{r}
+df2 = df[df$sim_type == "gene_tree",]
+
+df2$sim_type2 = "gene_tree"
+df2$sim_type2[df2$num_genetree == 100] = "gene_tree1"
+df2$sim_type2[df2$num_genetree == 1000] = "gene_tree2"
+df2$sim_type2[df2$num_genetree == 10000] = "gene_tree3"
+df2$sim_type2 = factor(df2$sim_type2) 
+
+#png("1.png", width = 8, height = 6, units = 'in', res = 300)
+# Note that I need to copy and paste into the R REPL rather than run through RStudio
+# for the PDF to be saved:
+pdf("../../ms/figures/top5-true-gt.pdf", width = 8, height = 4)
+
+df2 %>%
+  ggplot(aes(fill=label, x=nw_type)) + 
+  #geom_bar()+
+  geom_bar(aes(y = (..count..)/sum(..count..)))+
+    facet_wrap(.~sim_type2, scales = "free_y", 
+             nrow = 1,
+             labeller = labeller(sim_type2 = 
+                                     c("gene_tree1" = "True g.t. (100)",
+                                       "gene_tree2" = "True g.t. (1000)",
+                                       "gene_tree3" = "True g.t. (10000)")))+
+  labs(x = "", y = "")+
+  #scale_fill_manual('Types of top 5 networks', 
+  #                    labels=c('Other', 'Symmetrical network', 
+  #                             'Both symmetrical and true networks', 'True network'), 
+  #                    values=c('#CDC5BF', '#43CD80', '#EE8262', '#3A5FCD'))+
+  scale_fill_brewer('',labels=c('True and Symmetric', 'True', 'Symmetric','Other'), 
+                      palette = "PuBuGn", direction=-1)+
+  theme_bw()+
+  theme(panel.grid = element_blank(), 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, size=12),
+        legend.position = "top",
+        strip.background =element_rect(fill="gray95"),
+        strip.text.x = element_text(size = 12),
+        axis.text.y=element_blank(),
+        legend.text=element_text(size=12)) 
+
+dev.off()
+```
+## Estimated gene trees
+
+
+```{r}
+df2 = df[df$sim_type == "est_gene_tree",]
+
+df2$sim_type2 = "est_gene_tree"
+df2$sim_type2[df2$num_genetree == 1000 & df2$len_seq == 500] = "est_gene_tree2"
+df2$sim_type2[df2$num_genetree == 10000 & df2$len_seq == 500] = "est_gene_tree3"
+df2$sim_type2[df2$num_genetree == 1000 & df2$len_seq == 2000] = "est_gene_tree5"
+df2$sim_type2[df2$num_genetree == 10000 & df2$len_seq == 2000] = "est_gene_tree6"
+df2$sim_type2 = factor(df2$sim_type2) 
+
+
+#png("1.png", width = 8, height = 6, units = 'in', res = 300)
+# Note that I need to copy and paste into the R REPL rather than run through RStudio
+# for the PDF to be saved:
+pdf("../../ms/figures/top5-est-gt.pdf", width = 8, height = 4)
+
+df2 %>%
+  ggplot(aes(fill=label, x=nw_type)) + 
+  #geom_bar()+
+  geom_bar(aes(y = (..count..)/sum(..count..)))+
+    facet_wrap(.~sim_type2, scales = "free_y", 
+             nrow = 1,
+             labeller = labeller(sim_type2 = 
+                                     c("est_gene_tree2" = "gt=1000, L=500",
+                                       "est_gene_tree3" = "gt=10000, L=500",
+                                       "est_gene_tree5" = "gt=1000, L=2000",
+                                       "est_gene_tree6" = "gt=10000, L=2000")))+
   labs(x = "", y = "")+
   #scale_fill_manual('Types of top 5 networks', 
   #                    labels=c('Other', 'Symmetrical network', 
@@ -162,7 +473,8 @@ dev.off()
 ```
 
 
-Figure Top 1:
+# Figure Top 1
+
 ```{r}
 df$label[df$rank_true==1] = "true"
 df$label[df$rank_sym==1] = "sym"
@@ -175,20 +487,119 @@ df$label = factor(df$label, levels = c("true","sym","other"))
 
 ## need to put sim_type in different order:
 df$sim_type = factor(df$sim_type, levels=c("cf", "cf_noise", "gene_tree", "est_gene_tree"))
+```
+
+## True and noisy CF
+
+```{r}
+df2 = df[df$sim_type %in% c("cf","cf_noise"),]
+
+df2$sim_type2 = "cf"
+df2$sim_type2[df2$sim_type == "cf_noise" & df2$sd == 0.000005] = "cf_noise1"
+df2$sim_type2[df2$sim_type == "cf_noise" & df2$sd == 0.00005] = "cf_noise2"
+df2$sim_type2[df2$sim_type == "cf_noise" & df2$sd == 0.0005] = "cf_noise3"
+df2$sim_type2 = factor(df2$sim_type2) 
 
 # Note that I need to copy and paste into the R REPL rather than run through RStudio
 # for the PDF to be saved:
-pdf("../../ms/figures/top1.pdf", width = 8, height = 7)
+pdf("../../ms/figures/top1-true-noisy-cf.pdf", width = 8, height = 4)
 
-df %>%
+df2 %>%
   ggplot(aes(fill=label, x=nw_type)) + 
   geom_bar()+
-  facet_wrap(.~sim_type, scales = "free_y", nrow = 2,
-             labeller = labeller(sim_type = 
-                                 c("cf" = "True concordance factors",
-                                       "cf_noise" = "Noisy concordance factors",
-                                       "est_gene_tree" = "Estimated gene trees", 
-                                       "gene_tree" = "True gene trees")))+
+  facet_wrap(.~sim_type2, scales = "free_y", nrow = 1,
+             labeller = labeller(sim_type2 = 
+                                     c("cf" = "True CF",
+                                       "cf_noise1" = "Noisy CF (sd=5e-6)",
+                                       "cf_noise2" = "Noisy CF (sd=5e-5)",
+                                       "cf_noise3" = "Noisy CF (sd=5e-4)")))+
+  labs(x = "", y = "")+
+  #scale_fill_manual('', 
+  #                    labels=c('Other', 'Symmetrical network', 
+  #                              'True network'), 
+  #                    values=c('#CDC5BF', '#43CD80',  '#3A5FCD'))+
+  scale_fill_brewer('',labels=c('True', 'Symmetric','Other'), 
+                      palette = "PuBuGn", direction=-1)+
+  theme_bw()+
+  theme(panel.grid = element_blank(), 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, size=12),
+        legend.position = "top",
+        strip.background =element_rect(fill="gray95"),
+        strip.text.x = element_text(size = 12),
+        axis.text.y=element_blank(),
+        legend.text=element_text(size=12)) 
+
+dev.off()
+```
+## True gene trees
+
+```{r}
+df2 = df[df$sim_type == "gene_tree",]
+
+df2$sim_type2 = "gene_tree"
+df2$sim_type2[df2$num_genetree == 100] = "gene_tree1"
+df2$sim_type2[df2$num_genetree == 1000] = "gene_tree2"
+df2$sim_type2[df2$num_genetree == 10000] = "gene_tree3"
+df2$sim_type2 = factor(df2$sim_type2) 
+
+
+# Note that I need to copy and paste into the R REPL rather than run through RStudio
+# for the PDF to be saved:
+pdf("../../ms/figures/top1-true-gt.pdf", width = 8, height = 4)
+
+df2 %>%
+  ggplot(aes(fill=label, x=nw_type)) + 
+  geom_bar()+
+  facet_wrap(.~sim_type2, scales = "free_y", nrow = 1,
+             labeller = labeller(sim_type2 = 
+                                     c("gene_tree1" = "True g.t. (100)",
+                                       "gene_tree2" = "True g.t. (1000)",
+                                       "gene_tree3" = "True g.t. (10000)")))+
+  labs(x = "", y = "")+
+  #scale_fill_manual('', 
+  #                    labels=c('Other', 'Symmetrical network', 
+  #                              'True network'), 
+  #                    values=c('#CDC5BF', '#43CD80',  '#3A5FCD'))+
+  scale_fill_brewer('',labels=c('True', 'Symmetric','Other'), 
+                      palette = "PuBuGn", direction=-1)+
+  theme_bw()+
+  theme(panel.grid = element_blank(), 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, size=12),
+        legend.position = "top",
+        strip.background =element_rect(fill="gray95"),
+        strip.text.x = element_text(size = 12),
+        axis.text.y=element_blank(),
+        legend.text=element_text(size=12)) 
+
+dev.off()
+```
+
+## Estimated gene trees
+
+```{r}
+df2 = df[df$sim_type == "est_gene_tree",]
+
+df2$sim_type2 = "est_gene_tree"
+df2$sim_type2[df2$num_genetree == 1000 & df2$len_seq == 500] = "est_gene_tree2"
+df2$sim_type2[df2$num_genetree == 10000 & df2$len_seq == 500] = "est_gene_tree3"
+df2$sim_type2[df2$num_genetree == 1000 & df2$len_seq == 2000] = "est_gene_tree5"
+df2$sim_type2[df2$num_genetree == 10000 & df2$len_seq == 2000] = "est_gene_tree6"
+df2$sim_type2 = factor(df2$sim_type2) 
+
+
+# Note that I need to copy and paste into the R REPL rather than run through RStudio
+# for the PDF to be saved:
+pdf("../../ms/figures/top1-est-gt.pdf", width = 8, height = 4)
+
+df2 %>%
+  ggplot(aes(fill=label, x=nw_type)) + 
+  geom_bar()+
+  facet_wrap(.~sim_type2, scales = "free_y", nrow = 1,
+             labeller = labeller(sim_type2 = 
+                                     c("est_gene_tree2" = "gt=1000, L=500",
+                                       "est_gene_tree3" = "gt=10000, L=500",
+                                       "est_gene_tree5" = "gt=1000, L=2000",
+                                       "est_gene_tree6" = "gt=10000, L=2000")))+
   labs(x = "", y = "")+
   #scale_fill_manual('', 
   #                    labels=c('Other', 'Symmetrical network', 
