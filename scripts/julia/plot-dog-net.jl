@@ -20,21 +20,27 @@ plot(net, style=:majortree, edgewidth=2.0, arrowlen=0.1,
 tipoffset = 0.1, majorhybridedgecolor = "forestgreen",
 minorhybridedgecolor = "forestgreen")
 
-# Network by PhyloNet ML/MPL
+# Network by PhyloNet ML
 
-net2 = readTopology("(Dog:3.1093779661515573,((Coyote:7.208999474296622)#H1:1.219551624477565::0.37254126097149937,(GreyWolf:1.1053487333120922,(((AfricanHuntingDog:2.4260642271330113,Dhole:2.3564769490752617):2.772352422508372,GoldenJackal:0.22027852088219652):0.6767915156445676,#H1:0.036267875697669975::0.6274587390285007):0.8128409570875169):0.1316571705926631):0.12396177767673128);")
+net2 = readTopology("(AfricanHuntingDog:1.6101210673311783,(Dhole:3.098659596612107,((GoldenJackal:0.06861236708130897)#H1:0.38708669395167933::0.748622919326696,(Coyote:3.9986647804844644,(#H1:0.8103263495430857::0.25137708067330405,(Dog:2.936141610506084,GreyWolf:0.5582715925453998):0.3935145303756744):0.08298883848855856):2.0660671784296514):2.678281274906509):3.7168919379799035);")
 rootatnode!(net2,"AfricanHuntingDog")
 plot(net2,:R, showNodeNumber=true)
-rotate!(net2, -5)
+rotate!(net2, -6)
 plot(net2, style=:majortree, edgewidth=2.0, arrowlen=0.1,
 tipoffset = 0.1, majorhybridedgecolor = "blue",
 minorhybridedgecolor = "blue")
+## same as snaq, so not included
 
-net3 = readTopology("(((GreyWolf:1.0,((GoldenJackal:1.0,(AfricanHuntingDog:1.0,Dhole:1.0):2.9515483888182037):0.9268244647120316)#H1:1.6389735456732464::0.4217546175615423):0.06249851837557456,(Coyote:1.0,#H1:0.05390224918811372::0.5782453824384577):1.1458980337503157):0.3200450215571163,Dog:1.0);")
-rootatnode!(net3,"Coyote")
+# Network by PhyloNet MPL
+
+net3 = readTopology("(AfricanHuntingDog:1.0,((((Coyote:1.0,(Dog:1.0,GreyWolf:1.0):0.5745418868229112):0.836566984410819,(GoldenJackal:1.0)#H1:1.0::0.940732692938983):2.2916146136988855,#H1:1.0::0.059267307061017016):0.8776623951631757,Dhole:1.0):5.909315396052653);")
+rootatnode!(net3,"AfricanHuntingDog")
 plot(net3,:R, showNodeNumber=true)
+rotate!(net3, -3)
 rotate!(net3, -4)
-plot(net3, style=:majortree, edgewidth=2.0, arrowlen=0.1,
+rotate!(net3, -5)
+rotate!(net3, -6)
+plot(net3, edgewidth=2.0, arrowlen=0.1,
 tipoffset = 0.1, majorhybridedgecolor = "darkmagenta",
 minorhybridedgecolor = "darkmagenta")
 
