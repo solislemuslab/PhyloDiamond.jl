@@ -55,6 +55,7 @@ Grey wolf European (Eurasian), Dog
 0.0640276141678864: -1-5,-3,-2-6,-4,
 0.06402818665975059: -2-6,-1-5,-3,-4,
 ========================================================
+6.784463 seconds (13.69 M allocations: 729.519 MiB, 2.97% gc time, 96.53% compilation time)
   "Dhole"                         => 3
   "Golden jackal"                 => 5
   "African hunting dog"           => 1

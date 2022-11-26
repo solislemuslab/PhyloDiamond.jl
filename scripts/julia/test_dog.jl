@@ -14,6 +14,27 @@ using JLD2
 #choose(13, 4) = 715
 #choose(12, 4)
 function main()
+    f = open("./scripts/julia/dog.nex", "r")
+    file = open("dog_rooted.nex", "a")
+    cnt = 0
+    write(file, "#NEXUS\nBEGIN Trees;\n")
+    for line in readlines(f)
+        cnt+=1
+        if startswith(line, "Tree")
+            _, net = split(line, "=")
+
+            net = readTopology(net)
+            rootatnode!(net,"1")
+            write(file, "Tree gt"* string(cnt)* "="* writeTopology(net)*"\n")
+       
+        end
+    end
+    write(file, "END;\nBEGIN PHYLONET;\nInferNetwork_MPL (all) 1 -x 1 -pl 1;\nEND;")
+    close(f)
+    close(file)
+
+
+
     #cf = generate_cf_from_gene_trees("./simulation/dogs_estimated_gene_trees.tree")
     #genetrees = readMultiTopology("./simulation/sim_trees/dogs_estimated_gene_trees.tree")
     #save_object("dog_genetrees.jld2", genetrees)
