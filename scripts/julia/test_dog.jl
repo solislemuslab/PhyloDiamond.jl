@@ -14,27 +14,9 @@ using JLD2
 #choose(13, 4) = 715
 #choose(12, 4)
 function main()
-    f = open("./scripts/julia/dog.nex", "r")
-    file = open("dog_rooted.nex", "a")
-    cnt = 0
-    write(file, "#NEXUS\nBEGIN Trees;\n")
-    for line in readlines(f)
-        cnt+=1
-        if startswith(line, "Tree")
-            _, net = split(line, "=")
+end
 
-            net = readTopology(net)
-            rootatnode!(net,"1")
-            write(file, "Tree gt"* string(cnt)* "="* writeTopology(net)*"\n")
-       
-        end
-    end
-    write(file, "END;\nBEGIN PHYLONET;\nInferNetwork_MPL (all) 1 -x 1 -pl 1;\nEND;")
-    close(f)
-    close(file)
-
-
-
+function read_gene_trees()
     #cf = generate_cf_from_gene_trees("./simulation/dogs_estimated_gene_trees.tree")
     #genetrees = readMultiTopology("./simulation/sim_trees/dogs_estimated_gene_trees.tree")
     #save_object("dog_genetrees.jld2", genetrees)
@@ -72,34 +54,16 @@ function main()
             df[i,col] = string(value_map[df[i,col]])
         end
     end
-
-
-    test_all_possible_nw([("1", "2"), ("4","3"), ("5", "na"), ("6","na")], 
-    df, ".")
     """
 end
 
-main()
+function run_snaq()
+    @time net0 = snaq!(readTopology("./simulation/sim_trees/dog/start.tree"), readTableCF(df), hmax=1, filename="net0_bucky", seed=123, runs=10)
+end
 
-#@time net0 = snaq!(readTopology("./simulation/sim_trees/dog/start.tree"), readTableCF(df), hmax=1, filename="net0_bucky", seed=123, runs=10)
-
-#creating input file for phylonet
-"""
-tm = DataFrame(CSV.File("./simulation/sim_trees/dog/taxonmap.csv")) #6 species
-    for temp in ["Grey wolf Asian (Eurasian)", "Grey wolf North American", "Grey wolf Middle Eastern",
-        "African golden wolf hybrid", "African golden wolf Northwestern","African golden wolf Eastern",
-        "AndeanFox"]
-        tm = tm[tm[:,"species"].!=temp,:]
-    end
-    tm_dict = Dict(Pair.(tm.individual, tm.species))
-    taxon = unique!(tm[:,"species"])
-    value_map = Dict(taxon[i] => i for i in 1:length(taxon))
-
-    tm_del = DataFrame(CSV.File("./simulation/sim_trees/dog/taxonmap_del.csv")) #species need to be deleted
-    ind_del = tm_del[:, "individual"]
-
+function script_phylonet_dog_unrooted()
     f = open("./simulation/sim_trees/dog/dogs_estimated_gene_trees.tree", "r")
-    file = open("genetrees.txt", "a")
+    file = open("dog.nex", "a")
     cnt = 0
     write(file, "#NEXUS\nBEGIN Trees;\n")
     for line in readlines(f)
@@ -140,7 +104,52 @@ tm = DataFrame(CSV.File("./simulation/sim_trees/dog/taxonmap.csv")) #6 species
             write(file, "Tree gt"* string(cnt)* "="* writeTopology(net_merge)*"\n")
         end
     end
-    write(file, "END;\nBEGIN PHYLONET;\nInferNetwork_MPL (all) 1 -x 1 -pl 1;\nEND;")
+    write(file, "END;\nBEGIN PHYLONET;\nInferNetwork_MPL (all) 1 -x 10 -pl 10;\nEND;")
     close(f)
     close(file)
+end
+
+#creating input file for phylonet
+function script_phylonet_dog_rooted()
+    f = open("./scripts/julia/dog.nex", "r")
+    file = open("dog_rooted.nex", "a")
+    cnt = 0
+    write(file, "#NEXUS\nBEGIN Trees;\n")
+    for line in readlines(f)
+        if startswith(line, "Tree")
+            _, net = split(line, "=")
+            net = readTopology(net)
+            if net.numTaxa > 4
+                cnt+=1
+                if "1" in tipLabels(net)
+                    rootatnode!(net,"1")
+                else
+                    rootatnode!(net,"3")
+                end
+                write(file, "Tree gt"* string(cnt)* "="* writeTopology(net)*"\n")
+            end
+        end
+    end
+    write(file, "END;\nBEGIN PHYLONET;\nInferNetwork_MPL (all) 1 -x 10 -pl 10;\nEND;")
+    close(f)
+    close(file)
+end
+
+main()
+
+"""
+tm = DataFrame(CSV.File("./simulation/sim_trees/dog/taxonmap.csv")) #6 species
+    for temp in ["Grey wolf Asian (Eurasian)", "Grey wolf North American", "Grey wolf Middle Eastern",
+        "African golden wolf hybrid", "African golden wolf Northwestern","African golden wolf Eastern",
+        "AndeanFox"]
+        tm = tm[tm[:,"species"].!=temp,:]
+    end
+    tm_dict = Dict(Pair.(tm.individual, tm.species))
+    taxon = unique!(tm[:,"species"])
+    value_map = Dict(taxon[i] => i for i in 1:length(taxon))
+
+    tm_del = DataFrame(CSV.File("./simulation/sim_trees/dog/taxonmap_del.csv")) #species need to be deleted
+    ind_del = tm_del[:, "individual"]
+
+    
 """
