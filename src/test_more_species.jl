@@ -1,9 +1,6 @@
-"""
-cd("/Users/zhaoxingwu/Desktop/claudia lab/2022 spring phylogenetic/phylo-invariants")
-include("./scripts/julia/mapping.jl")
-include("./scripts/julia/invariants.jl")
-include("./scripts/julia/test_invariants.jl")
-"""
+include("mapping.jl")
+include("invariants.jl")
+include("test_invariants.jl")
 
 using PhyloNetworks, PhyloPlots, DataFrames, CSV, Statistics, Distributions, Random, DelimitedFiles, Combinatorics
 
@@ -72,9 +69,11 @@ function test_all_possible_sub_nw(N, cf, path, message)
     write(file, "========================================================\n") 
     write(file, message*"\n")
     write(file, "Actual Structure: " * N_to_str(N) * "\n")
-    t = N_to_t(N)
-
-    sub_all = subnetwork(N) #all possible subpermutation of the given network
+    t = unique!(cf[:,1])
+    t = vcat(t, unique!(cf[:,2]), unique!(cf[:,3]), unique!(cf[:,4]))
+    t = list_nw(unique!(t))
+    
+    sub_all = subnetwork(t) #all possible subpermutation of the given network
     
     rst_inv = []
     for i in 1:length(sub_all)
@@ -167,8 +166,7 @@ end
     subnetwork([("1", "2"), ("3", "4"), ("5", "6"), ("7", "8", "9")])
     -> ["2", "3", "4", "5", "6","7", "8", "9"], ["1", "2", "3", "4", "5", "6", "7", "8"]...
 """
-function subnetwork(N)
-    t = N_to_t(N)
+function subnetwork(t)
     #ind_all = vcat([collect(combinations(1:length(t),i)) for i=6:8]...) #select all combination of 6, 7, 8 indexes for N
     ind_all = vcat([collect(combinations(1:length(t),i)) for i=8:8]...) #select all combination of 6, 7, 8 indexes for N
     ret = []
