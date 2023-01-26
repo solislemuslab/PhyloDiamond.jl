@@ -100,9 +100,7 @@ function phylo_diamond_more_than_8_helper(cf, m, output_filename)
         net = add_mis_species(mis_species, net_all_sorted[i:end]) #when selecting other top networks, remove the first few network information
         if !(net in rst)
             push!(rst, net)
-
-            print(N_to_str(net)* ": " * " (" * string(rst_inv_sorted[i]) * ")" * "\n")
-            #write(file, "SELECTED: " * N_to_str(net) * "\n")
+            str = str * N_to_str(net)* ": " * " (" * string(rst_inv_sorted[i]) * ")" * "\n"
         end
         if length(rst) == m
             break

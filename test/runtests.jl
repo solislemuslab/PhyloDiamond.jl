@@ -2,5 +2,7 @@ using PhyloDiamond
 using Test
 
 @testset "PhyloDiamond.jl" begin
-    # Write your tests here.
+    ret = "-1-2,-3-4,-5-6,-7-8-9,:  (2.2216927709301364e-16)\n-1-2,-5-6,-3-4,-7-8-9,:  (2.2230610911746716e-16)\n-1-2,-5-6,-3-4-7,-8-9,:  (2.2230610911746716e-16)\n-1-2,-3-4,-7-8-9,-5-6,:  (0.006576057988736475)\n-1-2,-7-8,-3-4,-5-6-9,:  (0.00657929000066336)\n"
+    @test PhyloDiamond.phylo_diamond(PhyloDiamond.generate_cf([("1", "2"), ("3", "4"), ("5", "6"), ("7", "8", "9")], 0), 5) == ret
+    
 end

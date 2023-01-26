@@ -197,7 +197,6 @@ end
 function generate_cf(N, sd)
     network = N_to_network(N)
     net = readTopology(network)
-    plot(net,:R) ## just to check it matches your drawing
     
     #identifiable edges lengths were originally missing, so assigned default value of 1.0
     quartets = PhyloNetworks.allQuartets(tipLabels(net), false) 
