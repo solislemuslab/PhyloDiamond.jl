@@ -2,94 +2,110 @@ include("mapping.jl")
 include("invariants.jl")
 include("helper.jl")
 
-using PhyloNetworks, PhyloPlots, DataFrames, CSV, Statistics, Distributions, Random, DelimitedFiles, Combinatorics
+using PhyloNetworks, PhyloPlots, DataFrames, CSV, Statistics, Distributions, Random, DelimitedFiles, Combinatorics, StatsBase
 
-function phylo_diamond(cf::DataFrame, m::Int64; output_filename=nothing)
+"""
+    Implement PhyloDiamond algorithm (input cf table)
+    input:
+        cf: cf table (first 4 columns should be taxon names, last 3 columns should be cf values)
+        m: the number of optimal phylogenetic networks returned
+        output_filename: input a filename if users need to save output to a file; otherwise leave it blank or ""
+        newick: return networks in newick format if true; otherwise [(1,2),(3,4),(5,6),(7,8,9)]
+    output:
+        top m optimal phylogenetic networks
+"""
+function phylo_diamond(cf::DataFrame, m::Int64; output_filename::String="", newick::Bool = false)
+    cf = rename!(cf,[:tx1,:tx2, :tx3, :tx4, :expCF12,:expCF13,:expCF14])
+    t = cf_to_t(cf) #get all taxon names
+
+    if size(cf, 1) != binomial(length(t), 4) || size(cf, 2) != 7 #check the dimension of cf table
+        error("Please provide a complete cf table")
+    end
+
+    cf, value_map = taxon_dict(cf) #rename taxon to numbers
+
+    if length(t) <= 5
+        error("PhyloDiamond only accept more than 5 taxon")
+    elseif length(t) <= 8
+        phylo_diamond_no_more_than_8_helper(cf, m, output_filename, newick, value_map)
+    else
+        phylo_diamond_more_than_8_helper(cf, m, output_filename, newick, value_map)
+    end
+end
+
+"""
+    Implement PhyloDiamond algorithm (input gene tree file)
+    input:
+        gene_trees_filename
+        m: the number of optimal phylogenetic networks returned
+        output_filename: input a filename if users need to save output to a file; otherwise leave it blank or ""
+        newick: return networks in newick format if true; otherwise [(1,2),(3,4),(5,6),(7,8,9)]
+    output:
+        top m optimal phylogenetic networks
+"""
+function phylo_diamond(gene_trees_filename::String, m::Int64; output_filename::String="", newick::Bool = false)
+    cf = generate_cf_from_gene_trees(gene_trees_filename)
     t = cf_to_t(cf)
-    #rename taxon to numbers
+    cf, value_map = taxon_dict(cf)
 
     if length(t) <= 5
-        print("PhyloDiamond only accept more than 5 taxon\n")
-        return
+        error("PhyloDiamond only accept more than 5 taxon")
     elseif length(t) <= 8
-        phylo_diamond_no_more_than_8_helper(cf, m, output_filename)
+        phylo_diamond_no_more_than_8_helper(cf, m, output_filename, newick, value_map)
     else
-        phylo_diamond_more_than_8_helper(cf, m, output_filename)
-    end
-end
-
-function phylo_diamond(gene_trees_filename::String, m::Int64; output_filename=nothing)
-    t = cf_to_t(generate_cf_from_gene_trees(gene_trees_filename))
-    #rename taxon to numbers
-
-    if length(t) <= 5
-        print("PhyloDiamond only accept more than 5 taxon\n")
-        return
-    elseif length(t) <= 8
-        phylo_diamond_no_more_than_8_helper(cf, m, output_filename)
-    else
-        phylo_diamond_more_than_8_helper(cf, m, output_filename)
+        phylo_diamond_more_than_8_helper(cf, m, output_filename, newick, value_map)
     end
 end
 
 """
-input:
-    N: [("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")]
-    cf: cf table
-output:
-    a dataframe of invariant values where each column is each possible network of n taxa, 
-    the last row is the average of all invariants
-    the true network is N
+    helper function to handle no more than 8 taxa
+    input:
+        cf: cf table
+        m: the number of optimal phylogenetic networks returned
+        output_filename: input a filename if users need to save output to a file; otherwise leave it blank or ""
+        newick: return networks in newick format if true; otherwise [(1,2),(3,4),(5,6),(7,8,9)]
+        value_map: the dictionary of taxa to numbers
+    output:
+        top m optimal phylogenetic networks
 """
-function phylo_diamond_no_more_than_8_helper(cf, m, output_filename)
-    str = ""
+function phylo_diamond_no_more_than_8_helper(cf, m, output_filename, newick, value_map)
     t = cf_to_t(cf)
     net_all = list_nw(t)
+    inv_mean_sorted, net_all_sorted = get_inv_for_nw(net_all, cf)
+    str_start = "Inference of top " * string(m) * " " * string(length(t)) * "-taxon phylogenetic networks with phylogenetic invariants\n"
+    str = format_string(inv_mean_sorted[1:m], net_all_sorted[1:m], newick, value_map)
 
-    df = DataFrame() #storing the invariant values of each possible nw
-    
-    for i in 1:length(net_all)
-        colname = N_to_str(net_all[i])
-        val = test_invariants(net_all[i], cf)
-        push!(val, mean(filter(!isnan, val)))
-        df[!,colname] = val
-    end
-    insertcols!(df, 1, :row => ["1112","1121","1211","2111","1122","1212","2112","2211","2121","1221","1222","2212", "2122", "2221", "2222", "mean"])
-    
-    inv_mean =Matrix(df)[end,:][2:end]
-    net_all_sorted = net_all[sortperm(inv_mean)]
-    inv_mean_sorted = inv_mean[sortperm(inv_mean)]
-
-    for i in 1:m
-        str = str*string(sort(inv_mean, rev=false)[1:m][i]) * ": " * N_to_str(net_all[sortperm(inv_mean)[1:m][i]]) * "\n"
-    end
-
-    if output_filename !== nothing
+    if output_filename != ""
         file = open(output_filename, "a")
-        write(file, str)
+        write(file, str_start*str)
         close(file)
     end
-    return str
+
+    return str_start*str
 end
 
-function phylo_diamond_more_than_8_helper(cf, m, output_filename)
-    str = ""
+"""
+    helper function to handle more than 8 taxa
+    input:
+        cf: cf table
+        m: the number of optimal phylogenetic networks returned
+        output_filename: input a filename if users need to save output to a file; otherwise leave it blank or ""
+        newick: return networks in newick format if true; otherwise [(1,2),(3,4),(5,6),(7,8,9)]
+        value_map: the dictionary of taxa to numbers
+    output:
+        top m optimal phylogenetic networks
+"""
+function phylo_diamond_more_than_8_helper(cf, m, output_filename, newick, value_map)
     t = cf_to_t(cf)
     sub_all = subnetwork(t) #all possible subpermutation of the given network
-    
+    inv_mean_sorted, subnet_all_sorted = get_inv_for_nw(sub_all, cf)
+    str = ""
+    rst_net = []
     rst_inv = []
-    for i in 1:length(sub_all)
-        val = test_invariants(sub_all[i], cf)
-        push!(rst_inv, mean(filter(!isnan, val)))
-    end
-    order = sortperm(rst_inv)
-    rst_inv_sorted = rst_inv[order]
-    net_all_sorted = sub_all[order]
-
-    rst = []
-    for i in 1:length(net_all_sorted)
+    
+    for i in 1:length(subnet_all_sorted)
         #find the all the missing species for the subnetwork with smallest invariants
-        top_t = N_to_t(net_all_sorted[i])
+        top_t = N_to_t(subnet_all_sorted[i])
         mis_species = []
         for i in t
             if !(i in top_t)
@@ -97,27 +113,35 @@ function phylo_diamond_more_than_8_helper(cf, m, output_filename)
             end
         end
 
-        net = add_mis_species(mis_species, net_all_sorted[i:end]) #when selecting other top networks, remove the first few network information
-        if !(net in rst)
-            push!(rst, net)
-            str = str * N_to_str(net)* ": " * " (" * string(rst_inv_sorted[i]) * ")" * "\n"
+        net = add_mis_species(mis_species, subnet_all_sorted[i:end]) #when selecting other top networks, remove the first few network information
+        if !(net in rst_net)
+            push!(rst_net, net)
+            push!(rst_inv, inv_mean_sorted[i])
         end
-        if length(rst) == m
+        if length(rst_net) == m
             break
         end
     end
 
-    if output_filename !== nothing
+    str = format_string(rst_inv, rst_net, newick, value_map)
+    str_start = "Inference of top " * string(m) * " " * string(length(t)) * "-taxon phylogenetic networks with phylogenetic invariants\n"
+    
+    if output_filename != ""
         file = open(output_filename, "a")
-        write(file, str)
+        write(file, str_start*str)
         close(file)
     end
 
-    return str
+    return str_start*str
 end
 
+"""
+    input:
+        mis_species: the taxa missing from the subnetwork
+        net_all_sorted: a list of all possible networks sorted by the invariant values
+    output: add missing species to the subnetwork with smallest invariants
+"""
 function add_mis_species(mis_species, net_all_sorted)
-    #add missing species to the subnetwork with smallest invariants
     rst = net_all_sorted[1]
     n1 = net_all_sorted[1]
     for mis in mis_species
@@ -163,7 +187,6 @@ end
     -> ["2", "3", "4", "5", "6","7", "8", "9"], ["1", "2", "3", "4", "5", "6", "7", "8"]...
 """
 function subnetwork(t)
-    #ind_all = vcat([collect(combinations(1:length(t),i)) for i=6:8]...) #select all combination of 6, 7, 8 indexes for N
     ind_all = vcat([collect(combinations(1:length(t),i)) for i=8:8]...) #select all combination of 6, 7, 8 indexes for N
     ret = []
     
@@ -197,4 +220,74 @@ function test_invariants(N, cf)
     norm(inv_net2122(a)),
     norm(inv_net2221(a)),
     norm(inv_net2222(a))]
+end
+
+"""
+    input:
+        inv_mean_sorted: a sorted list of invariant values for each network
+        net_all_sorted: a list of all possible networks sorted by the invariant values
+        newick: return networks in newick format if true; otherwise [(1,2),(3,4),(5,6),(7,8,9)]
+        value_map: the dictionary of taxa to numbers
+    output:
+        a formatted string of optimal networks (net_all_sorted)
+"""
+function format_string(inv_mean_sorted, net_all_sorted, newick, value_map)
+    value_map = Dict(value => key for (key, value) in value_map)
+    str = ""
+    rank = tiedrank(inv_mean_sorted)
+
+    for i in 1:length(net_all_sorted)
+        # use the original taxon names according to value_map
+        for a in 1:length(net_all_sorted[i])
+            for b in 1:length(net_all_sorted[i][a])
+                if net_all_sorted[i][a][b] != "na"
+                    net_all_sorted[i][a][b] = value_map[net_all_sorted[i][a][b]]
+                end
+            end
+        end
+
+        if newick
+            str = str * string(Int(round(rank[i]))) * ". N" * N_to_N_num(net_all_sorted[i]) * ": \"" * N_to_network(net_all_sorted[i]) * "\" (" * string(inv_mean_sorted[i]) * ")\n"
+        else
+            str = str * string(Int(round(rank[i]))) * ". N" * N_to_N_num(net_all_sorted[i]) * ": " * N_to_str(net_all_sorted[i]) * " (" * string(inv_mean_sorted[i]) * ")\n"
+        end
+    end
+
+    return str
+end
+
+"""
+    input:
+        net_all: a list of all possible networks
+        cf: cf table
+    output:
+        inv_mean_sorted: a sorted list of invariant values for each network
+        net_all_sorted: a list of all possible networks sorted by the invariant values
+"""
+function get_inv_for_nw(net_all, cf)
+    rst_inv = []
+    for i in 1:length(net_all)
+        val = test_invariants(net_all[i], cf)
+        push!(rst_inv, mean(filter(!isnan, val)))
+    end
+
+    order = sortperm(rst_inv)
+    inv_mean_sorted = rst_inv[order]
+    net_all_sorted = net_all[order]
+    return inv_mean_sorted, net_all_sorted
+end
+
+"""
+    input: cf table
+    output: replace original taxon names with numbers in the cf table and a mapping from taxon names to numbers
+"""
+function taxon_dict(cf)
+    taxon = cf_to_t(cf)
+    value_map = Dict(taxon[i] => string(i) for i in 1:length(taxon))
+    for col in ["tx1", "tx2", "tx3", "tx4"]
+        for i in 1:nrow(cf)
+            cf[i,col] = string(value_map[cf[i,col]])
+        end
+    end
+    return cf, value_map
 end

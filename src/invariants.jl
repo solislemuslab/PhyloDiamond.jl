@@ -1,11 +1,9 @@
 using LinearAlgebra
-# I don't think we need the n argument bc there will always be 57
-# a's for these invariants
 
 """
     input:
         a: an array of concordance factors
-    output: true/false whether the concordance factors fit the invariants
+    output: an array of invariants
 """
 function inv_net1112(a)
     length(a) == 57 || error("wrong dimension of a")
@@ -476,4 +474,3 @@ function inv_net2222(a)
     a[20]*a[29]*a[35] + 2a[20]*a[30]*a[35] - a[26]*a[29]*a[38] + a[26]*a[30]*a[38] - a[14]*a[26] + a[11]*a[30] - a[5]*a[35] - a[20]*a[35] - a[26]*a[35] + 2a[20]*a[38], 
     6a[8]*a[26]*a[35] - 3a[5]*a[32]*a[35] - 3a[20]*a[32]*a[35] - 3a[8]*a[26]*a[38] - 3a[23]*a[26]*a[38] + 6a[5]*a[32]*a[38] + a[17]*a[26] - a[11]*a[32] + a[2]*a[35] - a[2]*a[38]]
 end
-

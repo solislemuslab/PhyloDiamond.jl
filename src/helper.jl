@@ -1,16 +1,10 @@
-
-
 """
     input:
         t: array of taxa
-        list_nw(["A", "B", "C", "D", "E", "F", "G", "H"]) ->2520
-            2222
-        list_nw(["A", "B", "C", "D", "E", "F", "G"]) ->2520
-            1222, 2122, 2212, 2221
-        list_nw(["A", "B", "C", "D", "E", "F"]) ->1080
-            1122, 1212, 1221, 2112, 2121, 2211
-        list_nw(["A", "B", "C", "D", "E"]) ->240
-            1112, 1121, 1211, 2111
+        length(list_nw(["A", "B", "C", "D", "E", "F", "G", "H"])) ->2520 (N2222)
+        length(list_nw(["A", "B", "C", "D", "E", "F", "G"])) ->2520 (N1222, N2122, N2212, N2221)
+        length(list_nw(["A", "B", "C", "D", "E", "F"])) ->1080 (N1122, N1212, N1221, N2112, N2121, N2211)
+        length(list_nw(["A", "B", "C", "D", "E"])) ->240 (N1112, N1121, N1211, N2111)
     output: 
         the whole list of potential networks for those taxa
 """
@@ -80,6 +74,10 @@ end
 """
     input: two N 
     output: true if the two networks are the same; false, otherwise
+    compare_nw([("1", "2"), ("3", "4"), ("5", "6"), ("7", "8")],
+               [("1", "2"), ("3", "4"), ("5", "6"), ("7", "9")]) -> false
+    compare_nw([("1", "2"), ("3", "4"), ("5", "6"), ("7", "8")],
+               [("1", "2"), ("3", "4"), ("5", "6"), ("8", "7")]) -> true     
 """
 function compare_nw(N1, N2)
     for i in 1:4
@@ -95,23 +93,28 @@ end
 """
     input: array of tuples, individuals from each triangles of the network  
     output: a string of the input, mainly for saving
+    N_to_str([("1", "2"), ("3", "4"), ("5", "6"), ("7", "8", "9")])
+    -> "[(1,2),(3,4),(5,6),(7,8,9)]"   
 """
 function N_to_str(N)
-    colname = ""
+    ret = "["
     for n in N
+        ret=ret*"("
         for j in n
             if j != "na"
-                colname=string(colname*"-", j)
+                ret=string(ret, j*",")
             end
         end
-        colname=string(colname,",")
+        ret=ret[1:end-1]*"),"
     end
-    return colname
+    return ret[1:end-1]*"]"
 end
 
 """
     input: array of tuples, individuals from each triangles of the network  
-    output: the parenthetical network format based on the wiki rules
+    output: the parenthetical network format based on the wiki rules (default branch length and inheritance probability)
+    N_to_network([("1", "2"), ("3", "4"), ("5", "6"), ("7", "8")])
+    -> "((7:1,8:1):4, (((3:1,4:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(5:1,6:1):2):1):1);"
 """
 function N_to_network(N)
     rst = []
@@ -138,6 +141,8 @@ end
 """
     input: array of tuples, individuals from each triangles of the network  
     output: an array of each species, ignoring na
+    N_to_t([("1", "2"), ("3", "4"), ("5", "6"), ("7", "8")])
+    -> [ "1", "2", "3", "4", "5", "6", "7", "8"]
 """
 function N_to_t(N)
     t = []
@@ -153,7 +158,9 @@ end
 
 """
     input: array of tuples, individuals from each triangles of the network  
-    output: N_num eg. 2222
+    output: N_num 
+    N_to_N_num([("1", "2"), ("3", "4"), ("5", "6"), ("7", "8")])
+    -> "2222"
 """
 function N_to_N_num(N)
     rst = ""
@@ -169,6 +176,10 @@ function N_to_N_num(N)
     return rst
 end
 
+"""
+    input: cf table
+    output: an array of distinct taxa names
+"""
 function cf_to_t(cf)
     t = unique!(cf[:,1])
     t = vcat(t, unique!(cf[:,2]), unique!(cf[:,3]), unique!(cf[:,4]))
@@ -184,17 +195,17 @@ function generate_cf_from_gene_trees(filename_genetrees)
     genetrees = readMultiTopology(filename_genetrees);
     q,t = countquartetsintrees(genetrees);
     df_wide = writeTableCF(q,t)
-    df = df_wide[:,[:t1, :t2, :t3, :t4, :CF12_34, :CF13_24, :CF14_23]]
+    df = df_wide[:,[:tx1, :tx2, :tx3, :tx4, :expCF12, :expCF13, :expCF14]]
     return df
 end
 
 """
     input:
         N: array of tuples, individuals from each triangles of the network
-        network: the parenthetical format based on the wiki rules
+        sd: control the level of noise added to cf table (for simulation use)
     output: the table of CF values
 """
-function generate_cf(N, sd)
+function generate_cf(N, sd=0)
     network = N_to_network(N)
     net = readTopology(network)
     
