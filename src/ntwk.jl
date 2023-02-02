@@ -14,7 +14,7 @@ using PhyloNetworks, PhyloPlots, DataFrames, CSV, Statistics, Distributions, Ran
     output:
         top m optimal phylogenetic networks
 """
-function phylo_diamond(cf::DataFrame, m::Int64; output_filename::String="", newick::Bool = false)
+function phylo_diamond(cf::DataFrame, m::Int64, output_filename::String="phylo_diamond.txt")
     cf = rename!(cf,[:tx1,:tx2, :tx3, :tx4, :expCF12,:expCF13,:expCF14])
     t = cf_to_t(cf) #get all taxon names
 
@@ -27,9 +27,9 @@ function phylo_diamond(cf::DataFrame, m::Int64; output_filename::String="", newi
     if length(t) <= 5
         error("PhyloDiamond only accept more than 5 taxon")
     elseif length(t) <= 8
-        phylo_diamond_no_more_than_8_helper(cf, m, output_filename, newick, value_map)
+        phylo_diamond_no_more_than_8_helper(cf, m, output_filename, value_map)
     else
-        phylo_diamond_more_than_8_helper(cf, m, output_filename, newick, value_map)
+        phylo_diamond_more_than_8_helper(cf, m, output_filename, value_map)
     end
 end
 
@@ -43,7 +43,7 @@ end
     output:
         top m optimal phylogenetic networks
 """
-function phylo_diamond(gene_trees_filename::String, m::Int64; output_filename::String="", newick::Bool = false)
+function phylo_diamond(gene_trees_filename::String, m::Int64, output_filename::String="phylo_diamond.txt")
     cf = generate_cf_from_gene_trees(gene_trees_filename)
     t = cf_to_t(cf)
     cf, value_map = taxon_dict(cf)
@@ -51,9 +51,9 @@ function phylo_diamond(gene_trees_filename::String, m::Int64; output_filename::S
     if length(t) <= 5
         error("PhyloDiamond only accept more than 5 taxon")
     elseif length(t) <= 8
-        phylo_diamond_no_more_than_8_helper(cf, m, output_filename, newick, value_map)
+        phylo_diamond_no_more_than_8_helper(cf, m, output_filename, value_map)
     else
-        phylo_diamond_more_than_8_helper(cf, m, output_filename, newick, value_map)
+        phylo_diamond_more_than_8_helper(cf, m, output_filename, value_map)
     end
 end
 
@@ -68,20 +68,12 @@ end
     output:
         top m optimal phylogenetic networks
 """
-function phylo_diamond_no_more_than_8_helper(cf, m, output_filename, newick, value_map)
+function phylo_diamond_no_more_than_8_helper(cf, m, output_filename, value_map)
     t = cf_to_t(cf)
     net_all = list_nw(t)
     inv_mean_sorted, net_all_sorted = get_inv_for_nw(net_all, cf)
-    str_start = "Inference of top " * string(m) * " " * string(length(t)) * "-taxon phylogenetic networks with phylogenetic invariants\n"
-    str = format_string(inv_mean_sorted[1:m], net_all_sorted[1:m], newick, value_map)
 
-    if output_filename != ""
-        file = open(output_filename, "a")
-        write(file, str_start*str)
-        close(file)
-    end
-
-    return str_start*str
+    return phylo_diamond_output_helper(inv_mean_sorted[1:m], net_all_sorted[1:m], m, t, value_map, output_filename)
 end
 
 """
@@ -95,7 +87,7 @@ end
     output:
         top m optimal phylogenetic networks
 """
-function phylo_diamond_more_than_8_helper(cf, m, output_filename, newick, value_map)
+function phylo_diamond_more_than_8_helper(cf, m, output_filename, value_map)
     t = cf_to_t(cf)
     sub_all = subnetwork(t) #all possible subpermutation of the given network
     inv_mean_sorted, subnet_all_sorted = get_inv_for_nw(sub_all, cf)
@@ -123,16 +115,7 @@ function phylo_diamond_more_than_8_helper(cf, m, output_filename, newick, value_
         end
     end
 
-    str = format_string(rst_inv, rst_net, newick, value_map)
-    str_start = "Inference of top " * string(m) * " " * string(length(t)) * "-taxon phylogenetic networks with phylogenetic invariants\n"
-    
-    if output_filename != ""
-        file = open(output_filename, "a")
-        write(file, str_start*str)
-        close(file)
-    end
-
-    return str_start*str
+    return phylo_diamond_output_helper(rst_inv, rst_net, m, t, value_map, output_filename)
 end
 
 """
@@ -231,10 +214,11 @@ end
     output:
         a formatted string of optimal networks (net_all_sorted)
 """
-function format_string(inv_mean_sorted, net_all_sorted, newick, value_map)
+function phylo_diamond_output_helper(inv_mean_sorted, net_all_sorted, m, t, value_map, output_filename)
     value_map = Dict(value => key for (key, value) in value_map)
-    str = ""
+    str = "Inference of top " * string(m) * " " * string(length(t)) * "-taxon phylogenetic networks with phylogenetic invariants\n"
     rank = tiedrank(inv_mean_sorted)
+    ret = []
 
     for i in 1:length(net_all_sorted)
         # use the original taxon names according to value_map
@@ -245,15 +229,20 @@ function format_string(inv_mean_sorted, net_all_sorted, newick, value_map)
                 end
             end
         end
-
-        if newick
-            str = str * string(Int(round(rank[i]))) * ". N" * N_to_N_num(net_all_sorted[i]) * ": \"" * N_to_network(net_all_sorted[i]) * "\" (" * string(inv_mean_sorted[i]) * ")\n"
-        else
-            str = str * string(Int(round(rank[i]))) * ". N" * N_to_N_num(net_all_sorted[i]) * ": " * N_to_str(net_all_sorted[i]) * " (" * string(inv_mean_sorted[i]) * ")\n"
-        end
+        newick = N_to_network(net_all_sorted[i])
+        push!(ret, newick)
+        str = str * string(Int(round(rank[i]))) * ". N" * N_to_N_num(net_all_sorted[i]) * " (" * string(inv_mean_sorted[i]) * ")" *
+        "\n" * N_to_str(net_all_sorted[i]) *
+        "\n\"" * newick * "\"\n" 
     end
 
-    return str
+    file = open(output_filename, "a")
+    write(file, str)
+    close(file)
+
+    print(str)
+
+    return Dict(zip(1:m, ret))
 end
 
 """
