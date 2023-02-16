@@ -1,4 +1,48 @@
 @testset "mapping.jl" begin
+    @testset "get_a" begin
+        cf=CSV.read("./test/file/N2222_expCF.txt", DataFrame)
+        # Reading network
+        N = [("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")] ## true network
+        i=1
+        temp = Array(cf[i, :])
+        q = temp[1:4]
+        cfs = [temp[5], temp[6], temp[7]]
+        n = get_n(N, q)
+        @test n == [2,0,2,0]
+        cfs_ord = cfs_in_order(N, q, cfs)
+        @test round.(cfs_ord;digits=2) == [0.96,0.02,0.02]
+
+        i=69
+        temp = Array(cf[i, :])
+        q = temp[1:4]
+        cfs = [temp[5], temp[6], temp[7]]
+        n = get_n(N, q)
+        @test n == [0,1,1,2]
+        cfs_ord = cfs_in_order(N, q, cfs)
+        @test round.(cfs_ord;digits=2) == [0.91,0.05,0.05]
+
+
+        N = [("A","E"),("C","B"),("D","F"),("G","H")]
+        i=1
+        temp = Array(cf[i, :])
+        q = temp[1:4]
+        cfs = [temp[5], temp[6], temp[7]]
+        n = get_n(N, q)
+        @test n == [2,1,1,0]
+        cfs_ord = cfs_in_order(N, q, cfs)
+        @test round.(cfs_ord;digits=2) == [0.02,0.96,0.02]
+
+
+        i=2
+        temp = Array(cf[i, :])
+        q = temp[1:4]
+        cfs = [temp[5], temp[6], temp[7]]
+        n = get_n(N, q)
+        @test n == [2,2,0,0]
+        cfs_ord = cfs_in_order(N, q, cfs)
+        @test round.(cfs_ord;digits=2) == [0.06,0.87,0.06]
+    end
+
     @testset "get_n" begin
         @test get_n([("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")], ["C", "E", "G", "H"]) == [0, 1, 1, 2]
         @test get_n([("A", "B"), ("C", "D"), ("E", NaN), ("G", "H")], ["C", "E", "G", "H"]) == [0, 1, 1, 2]

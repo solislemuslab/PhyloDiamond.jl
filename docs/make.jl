@@ -9,9 +9,7 @@ makedocs(
         "Home" => "index.md",
         "Manual" => [
             "Installation" => "man/installation.md",
-            "Input Data" => "man/inputdata.md",
-            "Model Fitting" => "man/fit_model.md", #change
-            "Interpretation" => "man/interpretation.md",
+            "Implementation" => "man/implementation.md",
         ],
         "Library" => [
             "Public Methods" => "lib/public_methods.md",

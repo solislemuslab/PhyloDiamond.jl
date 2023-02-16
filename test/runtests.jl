@@ -10,3 +10,4 @@ using Test
 end
 
 include("test_mapping.jl")
+include("test_helper.jl")

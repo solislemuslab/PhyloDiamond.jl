@@ -1,49 +1,49 @@
 # PhyloDiamond
 
+# Bayesian Network Regression model for microbiome networks as covariates on biological phenotypes as response <picture> <img alt="phylodiamond logo" src="docs/src/logo_rooted_trans.png" align=right></picture>
+
 [![Build Status](https://github.com/zwu363/PhyloDiamond.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/zwu363/PhyloDiamond.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/zwu363/PhyloDiamond.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/zwu363/PhyloDiamond.jl)
 
 ## Overview
 
-`BayesianNetworkRegression.jl` is a [Julia](http://julialang.org/) package to perform (Bayesian) statistical inference of a regression model with networked covariates on a real response. 
+`PhyloDiamond.jl` is a [Julia](http://julialang.org/) package for ultrfast learning of 4-node hybridization cycles in phylogenetic networks using algebraic invariants.
 
-The structure of the data assumes $n$ samples, each sample with a microbial network represented as an adjacency matrix $A_i$ and a measured biological phenotype $y_i$. This package will identify influential nodes (microbes) associated with the phenotype, as well as significant edges (interactions among microbes) that are also associated with the phenotype.
-
-Examples of data that can be fit with this model:
-- Samples of soil microbiome data represented as $n$ microbial networks and measured yield of $n$ plants on that soil. The model will identify microbes and interactions associated with plant yield.
-- Samples of gut microbiome data represented as $n$ microbial networks, one per human patient, and BMI measurement per human patient. The model will identify microbes and interactions associated with BMI.
+Input data:
+- A concordance factor table
+- A file containing gene trees
 
 ## Usage
 
-`BayesianNetworkRegression.jl` is a julia package, so the user needs to install julia, and then install the package.
+`PhyloDiamond.jl` is a julia package, so the user needs to install julia, and then install the package.
 
 To install the package, type inside Julia:
 ```julia
 ]
-add BayesianNetworkRegression
+add PhyloDiamond
 ```
 
 ## Help and errors
 
-To get help, check the documentation [here](https://solislemuslab.github.io/BayesianNetworkRegression.jl/dev). Please report any bugs and errors by opening an
-[issue](https://github.com/solislemuslab/BayesianNetworkRegression.jl/issues/new).
+To get help, check the documentation [here](https://solislemuslab.github.io/PhyloDiamond.jl/dev). Please report any bugs and errors by opening an
+[issue](https://github.com/solislemuslab/PhyloDiamond.jl/issues/new).
 
 ## Citation
 
-If you use `BayesianNetworkRegression.jl` in your work, we kindly ask that you cite the following paper: 
+If you use `PhyloDiamond.jl` in your work, we kindly ask that you cite the following paper: 
 ```
-@article{Ozminkowski2022,
-author = {Ozminkowski, S. and Sol'{i}s-Lemus, C.},
+@article{wu_solis-lemus_2022,
+author = {Wu, Z. and Sol'{i}s-Lemus, C.},
 year = {2022},
-title = {{Identifying microbial drivers in biological phenotypes with a Bayesian Network Regression model}},
-journal = {arXiv:2208.05600}
+title = {{Ultrafast learning of 4-node hybridization cycles in phylogenetic networks using algebraic invariants}},
+url={https://arxiv.org/abs/2211.16647v1}
 }
 ```
 
 ## License
 
 `PhyloDiamond.jl` is licensed under a
-[GNU General Public License v2.0](https://github.com/solislemuslab/PhyloDiamond.jl/blob/main/LICENSE).
+[MIT License](https://github.com/solislemuslab/PhyloDiamond.jl/blob/main/LICENSE).
 
 ## Contributions
 

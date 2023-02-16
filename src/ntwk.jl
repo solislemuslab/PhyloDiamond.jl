@@ -7,10 +7,9 @@ using PhyloNetworks, PhyloPlots, DataFrames, CSV, Statistics, Distributions, Ran
 """
     Implement PhyloDiamond algorithm (input cf table)
     input:
-        cf: cf table (first 4 columns should be taxon names, last 3 columns should be cf values)
+        cf: concordance factor table (first 4 columns should be taxon names, last 3 columns should be cf values)
         m: the number of optimal phylogenetic networks returned
-        output_filename: input a filename if users need to save output to a file; otherwise leave it blank or ""
-        newick: return networks in newick format if true; otherwise [(1,2),(3,4),(5,6),(7,8,9)]
+        output_filename: a file name for the output file (or "phylo_diamond.txt" by default)
     output:
         top m optimal phylogenetic networks
 """
@@ -38,8 +37,7 @@ end
     input:
         gene_trees_filename
         m: the number of optimal phylogenetic networks returned
-        output_filename: input a filename if users need to save output to a file; otherwise leave it blank or ""
-        newick: return networks in newick format if true; otherwise [(1,2),(3,4),(5,6),(7,8,9)]
+        output_filename: a file name for the output file (or "phylo_diamond.txt" by default)
     output:
         top m optimal phylogenetic networks
 """
