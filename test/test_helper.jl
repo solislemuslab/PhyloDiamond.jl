@@ -1,3 +1,4 @@
+include("../src/helper.jl")
 @testset "helper.jl" begin
     @testset "list_nw" begin
         @test length(list_nw(["A", "B", "C", "D", "E", "F", "G", "H"])) == 2520 #(N2222)

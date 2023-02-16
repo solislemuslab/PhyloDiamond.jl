@@ -1,6 +1,4 @@
-# PhyloDiamond
-
-# Bayesian Network Regression model for microbiome networks as covariates on biological phenotypes as response <picture> <img alt="phylodiamond logo" src="docs/src/logo_rooted_trans.png" align=right></picture>
+# PhyloDiamond<picture> <img alt="phylodiamond logo" src="docs/src/logo_rooted_trans.png" align=right></picture>
 
 [![Build Status](https://github.com/zwu363/PhyloDiamond.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/zwu363/PhyloDiamond.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/zwu363/PhyloDiamond.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/zwu363/PhyloDiamond.jl)
@@ -47,5 +45,6 @@ url={https://arxiv.org/abs/2211.16647v1}
 
 ## Contributions
 
-Users interested in expanding functionalities in `PhyloDiamond.jl` are welcome to do so. See details on how to contribute in [CONTRIBUTING.md](https://github.com/solislemuslab/PhyloDiamond.jl/blob/main/CONTRIBUTING.md).
+Users interested in expanding functionalities in `PhyloDiamond.jl` are welcome to do so. See details on how to contribute in [CONTRIBUTING.md](https://github.com/solislemuslab/PhyloDiamond.jl/blob/master/CONTRIBUTING.md).
 
+                        

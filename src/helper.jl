@@ -195,7 +195,7 @@ function generate_cf_from_gene_trees(filename_genetrees)
     genetrees = readMultiTopology(filename_genetrees);
     q,t = countquartetsintrees(genetrees);
     df_wide = writeTableCF(q,t)
-    df = df_wide[:,[:tx1, :tx2, :tx3, :tx4, :expCF12, :expCF13, :expCF14]]
+    df = df_wide[:,[:t1, :t2, :t3, :t4, :CF12_34, :CF13_24, :CF14_23]]
     return df
 end
 

@@ -7,6 +7,9 @@ Below takes in three parameters including a concordance factor table:
 phylo_diamond(cf::DataFrame, m::Int64, output_filename::String="phylo_diamond.txt")
 ```
 - `cf`: a dataframe containing concordance factor values with taxon names in the first 4 columns and values in the last 3 columns
+  - Each row correspond to a taxon set `s={a,b,c,d}`
+  - There are only three possible quartet splits `q1=ab|cd, q2=ac|bd, q3=ad|bc`
+  - The dataframe should contain 7 columns, ordered as `a, b, c, d, q1, q2, q3`
 - `m`: the number of optimal phylogenetic networks returned
 - `output_filename`: a file name for the output file (or "phylo_diamond.txt" by default)
 ### Function taking in a gene tree file

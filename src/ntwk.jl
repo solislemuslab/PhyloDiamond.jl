@@ -43,6 +43,7 @@ end
 """
 function phylo_diamond(gene_trees_filename::String, m::Int64, output_filename::String="phylo_diamond.txt")
     cf = generate_cf_from_gene_trees(gene_trees_filename)
+    cf = rename!(cf,[:tx1,:tx2, :tx3, :tx4, :expCF12,:expCF13,:expCF14])
     t = cf_to_t(cf)
     cf, value_map = taxon_dict(cf)
 

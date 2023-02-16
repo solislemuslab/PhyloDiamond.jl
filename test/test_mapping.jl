@@ -1,3 +1,4 @@
+include("../src/mapping.jl")
 @testset "mapping.jl" begin
     @testset "get_a" begin
         cf=CSV.read("./test/file/N2222_expCF.txt", DataFrame)
