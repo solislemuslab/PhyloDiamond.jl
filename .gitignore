@@ -97,7 +97,7 @@ Backup[ ]of[ ]*.numbers/
 *.eps
 *.jpg
 *.jpeg
-*.png
+#*.png
 *.dot
 *.json
 
@@ -132,7 +132,7 @@ Backup[ ]of[ ]*.numbers/
 *.nosex
 
 ## html
-*.html
+#*.html
 *.css
 *.js
 *.ttf
