@@ -1,4 +1,4 @@
-# PhyloDiamond<picture> <img alt="phylodiamond logo" src="docs/src/logo_rooted_trans.png" align=right></picture>
+# PhyloDiamond<picture> <img alt="phylodiamond logo" src="docs/src/logo_unrooted_trans.png" align=right></picture>
 
 [![Build Status](https://github.com/zwu363/PhyloDiamond.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/zwu363/PhyloDiamond.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/zwu363/PhyloDiamond.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/zwu363/PhyloDiamond.jl)
@@ -41,7 +41,8 @@ url={https://arxiv.org/abs/2211.16647v1}
 ## License
 
 `PhyloDiamond.jl` is licensed under a
-[MIT License](https://github.com/solislemuslab/PhyloDiamond.jl/blob/main/LICENSE).
+[MIT License](https://github.com/solislemuslab/PhyloDiamond.jl/blob/master/LICENSE).
+
 
 ## Contributions
 

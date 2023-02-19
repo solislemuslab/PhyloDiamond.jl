@@ -1,7 +1,7 @@
 include("../src/mapping.jl")
 @testset "mapping.jl" begin
     @testset "get_a" begin
-        cf=CSV.read("./test/file/N2222_expCF.txt", DataFrame)
+        cf=CSV.read("./file/N2222_expCF.txt", DataFrame)
         # Reading network
         N = [("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")] ## true network
         i=1
