@@ -20,6 +20,15 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [compat]
 julia = "1"
+CSV = "0.10.9"
+Combinatorics = "1.0.2"
+DataFrames = "1.4.4"
+Distributions = "0.25.80"
+Documenter = "0.27.24"
+Example = "0.5.3"
+PhyloNetworks = "0.15.3"
+PhyloPlots = "1.0.0"
+StatsBase = "0.33.21"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
