@@ -28,9 +28,18 @@ First load the package.
 using PhyloDiamond
 ```
 ### Example 1: taking in a concordance factor table
-Here is an example concordance factor table
+If your concordance factor table is in csv file format, you need to read the file in Julia first. If you have not used the CSV.jl package before then you may need to install it first:
 ```julia
-df
+using Pkg
+Pkg.add("CSV")
+```
+The CSV.jl functions are not loaded automatically and must be imported into the session.
+```julia
+using CSV
+```
+The concordance factor table can now be read from a CSV file at path `input` using
+```julia
+df = DataFrame(CSV.File(input))
 ```
 ```
 70×7 DataFrame
