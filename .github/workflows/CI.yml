@@ -2,10 +2,10 @@ name: CI
 on:
   pull_request:
     branches:
-      - main
+      - master
   push:
     branches:
-      - main
+      - master
     tags: '*'
 jobs:
   test:
@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1.3.1' # Replace this with the minimum Julia version that your package supports. E.g. if your package requires Julia 1.5 or higher, change this to '1.5'.
+          - '1' # Replace this with the minimum Julia version that your package supports. E.g. if your package requires Julia 1.5 or higher, change this to '1.5'.
           - '1' # Leave this line unchanged. '1' will automatically expand to the latest stable 1.x release of Julia.
         os:
           - ubuntu-latest
@@ -61,11 +61,12 @@ jobs:
       - run: |
           julia --project=docs -e '
             using Documenter: doctest
-            using MyAwesomePackage     # change MyAwesomePackage to the name of your package
-            doctest(MyAwesomePackage)' # change MyAwesomePackage to the name of your package
+            using PhyloDiamond     # change MyAwesomePackage to the name of your package
+            doctest(PhyloDiamond)' # change MyAwesomePackage to the name of your package
       - run: julia --project=docs docs/make.jl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
       - uses: julia-actions/julia-processcoverage@v1
-      - uses: codecov/codecov-action@v1
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
