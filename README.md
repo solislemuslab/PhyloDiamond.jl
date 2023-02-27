@@ -1,7 +1,9 @@
 # PhyloDiamond<picture> <img alt="phylodiamond logo" src="docs/src/logo_unrooted_trans.png" align=right></picture>
 
 [![Build status (Github Actions)](https://github.com/solislemuslab/PhyloDiamond.jl/workflows/CI/badge.svg)](https://github.com/solislemuslab/PhyloDiamond.jl/actions)
-[![codecov.io](http://codecov.io/github/solislemuslab/PhyloDiamond.jl/coverage.svg?branch=main)](http://codecov.io/github/solislemuslab/PhyloDiamond.jl?branch=main)
+[![codecov.io](http://codecov.io/github/zwu363/PhyloDiamond.jl/coverage.svg?branch=main)](http://codecov.io/github/solislemuslab/PhyloDiamond.jl?branch=main)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://zwu363.github.io/PhyloDiamond.jl/stable)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://zwu363.github.io/PhyloDiamond.jl/dev)
 
 ## Overview
 
