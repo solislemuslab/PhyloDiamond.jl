@@ -1,4 +1,4 @@
-# PhyloDiamond <picture> <source media="(prefers-color-scheme: dark)" srcset="docs/src/logo_unrooted_trans.png"><img alt="phylodiamond logo" src="docs/src/logo_unrooted_trans.png" align=right></picture>
+# PhyloDiamond.jl <picture> <source media="(prefers-color-scheme: dark)" srcset="docs/src/logo_unrooted_trans.png"><img alt="phylodiamond logo" src="docs/src/logo_unrooted_trans.png" align=right></picture>
 
 [![CI](https://github.com/solislemuslab/PhyloDiamond.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/solislemuslab/PhyloDiamond.jl/actions/workflows/CI.yml)
 [![codecov.io](https://codecov.io/gh/zwu363/PhyloDiamond.jl/branch/master/graph/badge.svg?token=AXGI6GHHCY)](http://codecov.io/gh/zwu363/PhyloDiamond.jl)
@@ -6,15 +6,17 @@
 
 ## Overview
 
-`PhyloDiamond.jl` is a [Julia](http://julialang.org/) package for ultrfast learning of 4-node hybridization cycles in phylogenetic networks using algebraic invariants.
+`PhyloDiamond.jl` is a [Julia](http://julialang.org/) package for ultrafast learning of 4-node hybridization cycles in phylogenetic networks using algebraic invariants.
 
 Input data:
-- A concordance factor table
+- A concordance factor table, or
 - A file containing gene trees
 
 ## Usage
 
-`PhyloDiamond.jl` is a julia package, so the user needs to install julia, and then install the package.
+`PhyloDiamond.jl` is a Julia package, so the user needs to first install Julia, and then install the package.
+
+To install Julia, follow the instructions in [here](https://julialang.org/downloads/).
 
 To install the package, type inside Julia:
 ```julia
