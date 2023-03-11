@@ -8,7 +8,7 @@ To install Julia, follow instructions [here](http://julialang.org/downloads/).
 For a quick & basic tutorial on Julia, see
 [learn x in y minutes](http://learnxinyminutes.com/docs/julia/).
 
-Editors:
+Text editors:
 
 - [Visual Studio Code](https://code.visualstudio.com) provides an editor
   and an integrated development environment (IDE) for Julia: highly recommended!
@@ -28,7 +28,7 @@ To install the package, type inside Julia:
 add PhyloDiamond
 ```
 
-The first step can take a few minutes, be patient.
+Installation can take a few minutes, please be patient.
 
 The `PhyloDiamond.jl` package has dependencies like
 [Distributions](https://juliastats.org/Distributions.jl/stable/starting/) and

@@ -1,9 +1,9 @@
 
 # PhyloDiamond.jl
 
-[PhyloDiamond.jl](https://github.com/solislemuslab/PhyloDiamond.jl) is a [Julia](http://julialang.org/) package to perform PhyloDiamond algorithm to infer 4-node hybridization cycles in phylogenetic networks using algebraic invariants.
+[PhyloDiamond.jl](https://github.com/solislemuslab/PhyloDiamond.jl) is a [Julia](http://julialang.org/) package to infer 4-node hybridization cycles in phylogenetic networks using algebraic invariants. The inference algorithm is described in the paper below.
 
-## References
+## Citation
 
 If you use `PhyloDiamond.jl` in your work, we kindly ask that you cite the following paper: 
 

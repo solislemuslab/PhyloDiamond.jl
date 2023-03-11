@@ -5,13 +5,14 @@ include("helper.jl")
 using PhyloNetworks, PhyloPlots, DataFrames, CSV, Statistics, Distributions, Random, DelimitedFiles, Combinatorics, StatsBase
 
 """
-    Implement PhyloDiamond algorithm (input cf table)
-    input:
-        cf: concordance factor table (first 4 columns should be taxon names, last 3 columns should be cf values)
+    Function to infer a 4-node hybridization cycle using the phylogenetic invariants method
+    (Wu and Solis-Lemus, 2022)
+    Input:
+        cf: DataFrame object with the concordance factor table (first 4 columns should be taxon names, last 3 columns should be cf values)
         m: the number of optimal phylogenetic networks returned
         output_filename: a file name for the output file (or "phylo_diamond.txt" by default)
     output:
-        top m optimal phylogenetic networks
+        top m optimal phylogenetic networks in a Dict object
 """
 function phylo_diamond(cf::DataFrame, m::Int64, output_filename::String="phylo_diamond.txt")
     cf = rename!(cf,[:tx1,:tx2, :tx3, :tx4, :expCF12,:expCF13,:expCF14])
@@ -33,13 +34,14 @@ function phylo_diamond(cf::DataFrame, m::Int64, output_filename::String="phylo_d
 end
 
 """
-    Implement PhyloDiamond algorithm (input gene tree file)
-    input:
-        gene_trees_filename
+    Function to infer a 4-node hybridization cycle using the phylogenetic invariants method
+    (Wu and Solis-Lemus, 2022)
+    Input:
+        gene_trees_filename: textfile with gene trees (one per row) in parenthetical format
         m: the number of optimal phylogenetic networks returned
         output_filename: a file name for the output file (or "phylo_diamond.txt" by default)
     output:
-        top m optimal phylogenetic networks
+        top m optimal phylogenetic networks in a Dict object
 """
 function phylo_diamond(gene_trees_filename::String, m::Int64, output_filename::String="phylo_diamond.txt")
     cf = generate_cf_from_gene_trees(gene_trees_filename)
