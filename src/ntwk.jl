@@ -234,7 +234,7 @@ function phylo_diamond_output_helper(inv_mean_sorted, net_all_sorted, m, t, valu
         push!(ret, newick)
         str = str * string(Int(round(rank[i]))) * ". N" * N_to_N_num(net_all_sorted[i]) * " (" * string(inv_mean_sorted[i]) * ")" *
         "\n" * N_to_str(net_all_sorted[i]) *
-        "\n\"" * newick * "\"\n" 
+        "\n" * newick * "\n" 
     end
 
     file = open(output_filename, "a")
