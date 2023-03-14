@@ -1,4 +1,4 @@
-# PhyloDiamond.jl <picture> <source media="(prefers-color-scheme: dark)" srcset="docs/src/logo_unrooted_trans.png"><img alt="phylodiamond logo" src="docs/logo_unrooted_trans.png" align=right width="400"></picture>
+# PhyloDiamond.jl <picture> <source media="(prefers-color-scheme: dark)" srcset="docs/logo_unrooted_trans.png"><img alt="phylodiamond logo" src="docs/logo_unrooted_trans.png" align=right width="400"></picture>
 
 [![CI](https://github.com/solislemuslab/PhyloDiamond.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/solislemuslab/PhyloDiamond.jl/actions/workflows/CI.yml)
 [![codecov.io](https://codecov.io/gh/zwu363/PhyloDiamond.jl/branch/master/graph/badge.svg?token=AXGI6GHHCY)](http://codecov.io/gh/zwu363/PhyloDiamond.jl)
