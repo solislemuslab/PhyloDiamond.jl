@@ -11,7 +11,7 @@ library(RColorBrewer) ## https://r-graph-gallery.com/38-rcolorbrewers-palettes.h
 ```
 
 ```{r}
-df = read.csv("../../simulation/result/rst_all.csv") ##downloaded from google drive
+df = read.csv("../../result/rst_all.csv") ##downloaded from google drive
 df$nw_type = as.factor(df$nw_type)
 df$sim_type[df$num_genetree==0 & df$len_seq==0 & df$sd == 0] = "cf"
 df$sim_type[df$num_genetree==0 & df$len_seq==0 & df$sd != 0] = "cf_noise"
@@ -347,7 +347,7 @@ df2$sim_type2 = factor(df2$sim_type2)
 #png("1.png", width = 8, height = 6, units = 'in', res = 300)
 # Note that I need to copy and paste into the R REPL rather than run through RStudio
 # for the PDF to be saved:
-pdf("../../ms/figures/top5-true-noisy-cf.pdf", width = 8, height = 4)
+pdf("top5-true-noisy-cf.pdf", width = 8, height = 4)
 
 df2 %>%
   ggplot(aes(fill=label, x=nw_type)) + 
@@ -360,7 +360,7 @@ df2 %>%
                                        "cf_noise1" = "Noisy CF (sd=5e-6)",
                                        "cf_noise2" = "Noisy CF (sd=5e-5)",
                                        "cf_noise3" = "Noisy CF (sd=5e-4)")))+
-  labs(x = "", y = "")+
+  labs(x = "", y = "Proportion of replicates")+
   #scale_fill_manual('Types of top 5 networks', 
   #                    labels=c('Other', 'Symmetrical network', 
   #                             'Both symmetrical and true networks', 'True network'), 
@@ -393,7 +393,7 @@ df2$sim_type2 = factor(df2$sim_type2)
 #png("1.png", width = 8, height = 6, units = 'in', res = 300)
 # Note that I need to copy and paste into the R REPL rather than run through RStudio
 # for the PDF to be saved:
-pdf("../../ms/figures/top5-true-gt.pdf", width = 8, height = 4)
+pdf("top5-true-gt.pdf", width = 8, height = 4)
 
 df2 %>%
   ggplot(aes(fill=label, x=nw_type)) + 
@@ -405,7 +405,7 @@ df2 %>%
                                      c("gene_tree1" = "True g.t. (100)",
                                        "gene_tree2" = "True g.t. (1000)",
                                        "gene_tree3" = "True g.t. (10000)")))+
-  labs(x = "", y = "")+
+  labs(x = "", y = "Proportion of replicates")+
   #scale_fill_manual('Types of top 5 networks', 
   #                    labels=c('Other', 'Symmetrical network', 
   #                             'Both symmetrical and true networks', 'True network'), 
@@ -440,7 +440,7 @@ df2$sim_type2 = factor(df2$sim_type2)
 #png("1.png", width = 8, height = 6, units = 'in', res = 300)
 # Note that I need to copy and paste into the R REPL rather than run through RStudio
 # for the PDF to be saved:
-pdf("../../ms/figures/top5-est-gt.pdf", width = 8, height = 4)
+pdf("top5-est-gt.pdf", width = 8, height = 4)
 
 df2 %>%
   ggplot(aes(fill=label, x=nw_type)) + 
@@ -453,7 +453,7 @@ df2 %>%
                                        "est_gene_tree3" = "gt=10000, L=500",
                                        "est_gene_tree5" = "gt=1000, L=2000",
                                        "est_gene_tree6" = "gt=10000, L=2000")))+
-  labs(x = "", y = "")+
+  labs(x = "", y = "Proportion of replicates")+
   #scale_fill_manual('Types of top 5 networks', 
   #                    labels=c('Other', 'Symmetrical network', 
   #                             'Both symmetrical and true networks', 'True network'), 
@@ -502,7 +502,7 @@ df2$sim_type2 = factor(df2$sim_type2)
 
 # Note that I need to copy and paste into the R REPL rather than run through RStudio
 # for the PDF to be saved:
-pdf("../../ms/figures/top1-true-noisy-cf.pdf", width = 8, height = 4)
+pdf("top1-true-noisy-cf.pdf", width = 8, height = 4)
 
 df2 %>%
   ggplot(aes(fill=label, x=nw_type)) + 
@@ -513,7 +513,7 @@ df2 %>%
                                        "cf_noise1" = "Noisy CF (sd=5e-6)",
                                        "cf_noise2" = "Noisy CF (sd=5e-5)",
                                        "cf_noise3" = "Noisy CF (sd=5e-4)")))+
-  labs(x = "", y = "")+
+  labs(x = "", y = "Proportion of replicates")+
   #scale_fill_manual('', 
   #                    labels=c('Other', 'Symmetrical network', 
   #                              'True network'), 
@@ -545,7 +545,7 @@ df2$sim_type2 = factor(df2$sim_type2)
 
 # Note that I need to copy and paste into the R REPL rather than run through RStudio
 # for the PDF to be saved:
-pdf("../../ms/figures/top1-true-gt.pdf", width = 8, height = 4)
+pdf("top1-true-gt.pdf", width = 8, height = 4)
 
 df2 %>%
   ggplot(aes(fill=label, x=nw_type)) + 
@@ -555,7 +555,7 @@ df2 %>%
                                      c("gene_tree1" = "True g.t. (100)",
                                        "gene_tree2" = "True g.t. (1000)",
                                        "gene_tree3" = "True g.t. (10000)")))+
-  labs(x = "", y = "")+
+  labs(x = "", y = "Proportion of replicates")+
   #scale_fill_manual('', 
   #                    labels=c('Other', 'Symmetrical network', 
   #                              'True network'), 
@@ -589,7 +589,7 @@ df2$sim_type2 = factor(df2$sim_type2)
 
 # Note that I need to copy and paste into the R REPL rather than run through RStudio
 # for the PDF to be saved:
-pdf("../../ms/figures/top1-est-gt.pdf", width = 8, height = 4)
+pdf("top1-est-gt.pdf", width = 8, height = 4)
 
 df2 %>%
   ggplot(aes(fill=label, x=nw_type)) + 
@@ -600,7 +600,7 @@ df2 %>%
                                        "est_gene_tree3" = "gt=10000, L=500",
                                        "est_gene_tree5" = "gt=1000, L=2000",
                                        "est_gene_tree6" = "gt=10000, L=2000")))+
-  labs(x = "", y = "")+
+  labs(x = "", y = "Proportion of replicates")+
   #scale_fill_manual('', 
   #                    labels=c('Other', 'Symmetrical network', 
   #                              'True network'), 
