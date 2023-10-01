@@ -347,9 +347,10 @@ df2$sim_type2 = factor(df2$sim_type2)
 #png("1.png", width = 8, height = 6, units = 'in', res = 300)
 # Note that I need to copy and paste into the R REPL rather than run through RStudio
 # for the PDF to be saved:
-#pdf("top5-true-noisy-cf.pdf", width = 8, height = 4)
+pdf("top5-true-noisy-cf.pdf", width = 8, height = 4)
 
 df2 %>%
+   mutate(across(sim_type2, factor, levels=c("cf_noise3","cf_noise2","cf_noise1", "cf"))) %>% #remove this to change order from cf to cf_noise3
   ggplot(aes(fill=label, x=nw_type)) + 
   #geom_bar()+
   geom_bar(aes(y = (..count..)/sum(..count..)))+
@@ -376,7 +377,7 @@ df2 %>%
         axis.text.y=element_blank(),
         legend.text=element_text(size=12)) 
 
-#dev.off()
+dev.off()
 ```
 ## True gene trees
 
@@ -504,7 +505,7 @@ df2$sim_type2 = factor(df2$sim_type2)
 # for the PDF to be saved:
 pdf("top1-true-noisy-cf.pdf", width = 8, height = 4)
 
-df2 %>%%>%
+df2 %>%
    mutate(across(sim_type2, factor, levels=c("cf_noise3","cf_noise2","cf_noise1", "cf"))) %>%
   ggplot(aes(fill=label, x=nw_type)) + 
   geom_bar()+
