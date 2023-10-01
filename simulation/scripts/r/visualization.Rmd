@@ -47,7 +47,7 @@ df3$sim_type2 = factor(df3$sim_type2)
 
 # Note that I need to copy and paste into the R REPL rather than run through RStudio
 # for the PDF to be saved:
-pdf("../../ms/figures/invariant-score-true-noisy.pdf", width = 8, height = 4)
+#pdf("../../ms/figures/invariant-score-true-noisy.pdf", width = 8, height = 4)
 
 df3 %>%
   ggplot(mapping = aes(x = nw_type, y = inv))+
@@ -76,7 +76,7 @@ df3 %>%
         strip.text.x = element_text(size = 12),
         legend.text=element_text(size=12))
 
-dev.off()
+#dev.off()
 ```
 ## True gene trees
 
@@ -347,7 +347,7 @@ df2$sim_type2 = factor(df2$sim_type2)
 #png("1.png", width = 8, height = 6, units = 'in', res = 300)
 # Note that I need to copy and paste into the R REPL rather than run through RStudio
 # for the PDF to be saved:
-pdf("top5-true-noisy-cf.pdf", width = 8, height = 4)
+#pdf("top5-true-noisy-cf.pdf", width = 8, height = 4)
 
 df2 %>%
   ggplot(aes(fill=label, x=nw_type)) + 
@@ -376,7 +376,7 @@ df2 %>%
         axis.text.y=element_blank(),
         legend.text=element_text(size=12)) 
 
-dev.off()
+#dev.off()
 ```
 ## True gene trees
 
@@ -504,15 +504,16 @@ df2$sim_type2 = factor(df2$sim_type2)
 # for the PDF to be saved:
 pdf("top1-true-noisy-cf.pdf", width = 8, height = 4)
 
-df2 %>%
+df2 %>%%>%
+   mutate(across(sim_type2, factor, levels=c("cf_noise3","cf_noise2","cf_noise1", "cf"))) %>%
   ggplot(aes(fill=label, x=nw_type)) + 
   geom_bar()+
   facet_wrap(.~sim_type2, scales = "free_y", nrow = 1,
              labeller = labeller(sim_type2 = 
-                                     c("cf" = "True CF",
-                                       "cf_noise1" = "Noisy CF (sd=5e-6)",
+                                     c("cf_noise3" = "Noisy CF (sd=5e-4)",
                                        "cf_noise2" = "Noisy CF (sd=5e-5)",
-                                       "cf_noise3" = "Noisy CF (sd=5e-4)")))+
+                                       "cf_noise1" = "Noisy CF (sd=5e-6)",
+                                       "cf" = "True CF")))+
   labs(x = "", y = "Proportion of replicates")+
   #scale_fill_manual('', 
   #                    labels=c('Other', 'Symmetrical network', 
