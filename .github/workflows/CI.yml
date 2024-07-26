@@ -29,15 +29,56 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
 
-      # Install Rosetta 2 on macOS and run steps under Rosetta
+      # Install Rosetta 2 on macOS
       - name: Install Rosetta 2 on macOS
         if: matrix.os == 'macos-latest'
         run: softwareupdate --install-rosetta --agree-to-license
 
-      - name: Run steps under Rosetta 2
-        if: matrix.os == 'macos-latest'
-        shell: bash
+      - name: Set up the Julia project
         run: |
-          arch -x86_64 julia -e 'using Pkg; Pkg.build()'
-          arch -x86_64 julia -e 'using Pkg; Pkg.test()'
+          julia --project=. -e 'using Pkg; Pkg.instantiate()'
+
+      - name: Run Julia build under Rosetta 2
+        if: matrix.os == 'macos-latest'
+        run: |
+          arch -x86_64 julia --project=. -e 'using Pkg; Pkg.build()'
+
+      - name: Run Julia tests under Rosetta 2
+        if: matrix.os == 'macos-latest'
+        run: |
+          arch -x86_64 julia --project=. -e 'using Pkg; Pkg.test()'
+
+      - name: Run steps for other OSes
+        if: matrix.os != 'macos-latest'
+        run: |
+          julia --project=. -e 'using Pkg; Pkg.build() && Pkg.test()'
+
+      - uses: actions/cache@v1
+        env:
+          cache-name: cache-artifacts
+        with:
+          path: ~/.julia/artifacts
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('**/Project.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-test-${{ env.cache-name }}-
+            ${{ runner.os }}-test-
+            ${{ runner.os }}-
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: julia-actions/setup-julia@latest
+        with:
+          version: '1.7'
+      - name: Install dependencies
+        run: julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
+      - uses: julia-actions/julia-runtest@v1
+      - name: Build and deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # If authenticating with GitHub Actions token
+        run: julia --project=docs/ --code-coverage=user docs/make.jl
+      - uses: julia-actions/julia-processcoverage@v1
+      - uses: codecov/codecov-action@v1
+
 
