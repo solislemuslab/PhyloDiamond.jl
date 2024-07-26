@@ -29,17 +29,18 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
 
-      # Install R on macOS
+      # Install x86_64 R on macOS
       - name: Install R on macOS
         if: matrix.os == 'macos-latest'
         run: |
-          brew install --cask r
-          echo "R installed at: $(which R)"
+          softwareupdate --install-rosetta --agree-to-license
+          arch -x86_64 /usr/local/bin/brew install --cask r
+          echo "R installed at: $(arch -x86_64 which R)"
 
       # Set R_HOME for macOS
       - name: Set R_HOME environment variable
         if: matrix.os == 'macos-latest'
-        run: echo "R_HOME=$(R RHOME)" >> $GITHUB_ENV
+        run: echo "R_HOME=$(arch -x86_64 R RHOME)" >> $GITHUB_ENV
 
       - uses: actions/cache@v1
         env:
