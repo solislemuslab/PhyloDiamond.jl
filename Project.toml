@@ -1,7 +1,7 @@
 name = "PhyloDiamond"
 uuid = "5fd89c64-9bfa-4c3b-9406-7e573fc4f4af"
 authors = ["zwu363 <79068497+zwu363@users.noreply.github.com> and contributors"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
