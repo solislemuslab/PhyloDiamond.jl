@@ -1,5 +1,17 @@
 using PhyloDiamond
 using Test
+using LinearAlgebra
+using CSV
+using DataFrames
+using PhyloNetworks
+using PhyloPlots
+using Statistics
+using Distributions
+using Random
+using DelimitedFiles
+using Combinatorics
+using StatsBase
+
 print(pwd())
 @testset "PhyloDiamond.jl" begin
     cf = PhyloDiamond.generate_cf([("1", "2"), ("3", "4"), ("5", "6"), ("7", "8", "9")], 0)
