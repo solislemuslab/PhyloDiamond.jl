@@ -1,6 +1,6 @@
-include("mapping.jl")
-include("invariants.jl")
-include("helper.jl")
+#include("mapping.jl")
+#include("invariants.jl")
+#include("helper.jl")
 
 using PhyloNetworks, PhyloPlots, DataFrames, CSV, Statistics, Distributions, Random, DelimitedFiles, Combinatorics, StatsBase
 
