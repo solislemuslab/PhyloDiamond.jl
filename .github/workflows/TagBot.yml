@@ -1,0 +1,24 @@
+name: TagBot
+on:
+  issue_comment:
+    types:
+      - created
+  workflow_dispatch:
+    inputs:
+      lookback:
+        description: "[DEPRECATED] No longer has any effect"
+        default: "3"
+jobs:
+  TagBot:
+    if: github.event_name == 'workflow_dispatch' || github.actor == 'JuliaTagBot'
+    # ubuntu-slim doesn't support containers, and thus won't work
+    runs-on: ubuntu-latest
+    steps:
+      - uses: JuliaRegistries/TagBot@87cc4cc2b4639f6c743f5772f376a32914060732 # v1.25.15
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # SSH deploy key so the new tag triggers the Documentation workflow (stable docs).
+          # For commits that modify workflow files, the SSH key enables tagging but the
+          # GitHub Release must be created by hand.
+          # See: https://github.com/JuliaRegistries/TagBot#commits-that-modify-workflow-files
+          ssh: ${{ secrets.DOCUMENTER_KEY }}
