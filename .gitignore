@@ -152,3 +152,6 @@ Backup[ ]of[ ]*.numbers/
 
 ## H5
 *.h5
+
+# Documenter build output
+docs/build/

@@ -5,6 +5,8 @@ makedocs(
     authors="Zhaoxing Wu, Claudia Solís-Lemus, and contributors",
     modules=[PhyloDiamond],
     format = Documenter.HTML(prettyurls = get(ENV, "CI", nothing) == "true"),
+    # many exported helpers are not in the manual yet: warn instead of failing the build
+    warnonly = [:missing_docs],
     pages = [
         "Home" => "index.md",
         "Manual" => [
@@ -19,4 +21,5 @@ makedocs(
 
 deploydocs(
     repo = "github.com/solislemuslab/PhyloDiamond.jl.git",
+    devbranch = "master",
 )

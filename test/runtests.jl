@@ -1,20 +1,15 @@
 using PhyloDiamond
 using Test
-using LinearAlgebra
 using CSV
 using DataFrames
 using PhyloNetworks
-using PhyloPlots
-using Statistics
-using Distributions
+using SNaQ
 using Random
-using DelimitedFiles
-using Combinatorics
-using StatsBase
 
-print(pwd())
+include("generate_cf.jl")
+
 @testset "PhyloDiamond.jl" begin
-    cf = PhyloDiamond.generate_cf([("1", "2"), ("3", "4"), ("5", "6"), ("7", "8", "9")], 0)
+    cf = generate_cf([("1", "2"), ("3", "4"), ("5", "6"), ("7", "8", "9")], 0)
     dict = PhyloDiamond.phylo_diamond(cf, 5)
     @test length(dict) == 5
     @test dict[5] == "((9:1,5:1,6:1):4, (((7:1,8:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(3:1,4:1):2):1):1);"
