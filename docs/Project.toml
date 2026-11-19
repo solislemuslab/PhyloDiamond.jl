@@ -1,5 +1,6 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+PhyloDiamond = "5fd89c64-9bfa-4c3b-9406-7e573fc4f4af"
 
 [compat]
-Documenter = "0.27"
+Documenter = "1"

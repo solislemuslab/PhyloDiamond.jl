@@ -3,14 +3,9 @@ __precompile__()
 module PhyloDiamond
 
   using LinearAlgebra
-  using CSV
   using DataFrames
   using PhyloNetworks
-  using PhyloPlots
   using Statistics
-  using Distributions
-  using Random
-  using DelimitedFiles
   using Combinatorics
   using StatsBase
 
@@ -24,7 +19,6 @@ module PhyloDiamond
     N_to_N_num,
     cf_to_t,
     generate_cf_from_gene_trees,
-    generate_cf,
     inv_net1112,
     inv_net1121,
     inv_net1211,
