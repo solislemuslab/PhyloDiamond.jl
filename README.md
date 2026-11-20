@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/solislemuslab/PhyloDiamond.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/solislemuslab/PhyloDiamond.jl/actions/workflows/CI.yml)
 [![codecov.io](https://codecov.io/gh/solislemuslab/PhyloDiamond.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/solislemuslab/PhyloDiamond.jl)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://solislemuslab.github.io/PhyloDiamond.jl/stable)
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://solislemuslab.github.io/PhyloDiamond.jl/dev)
 
 ## Overview
@@ -26,7 +27,7 @@ add PhyloDiamond
 
 ## Help and errors
 
-To get help, check the documentation [here](https://solislemuslab.github.io/PhyloDiamond.jl/dev). Please report any bugs and errors by opening an
+To get help, check the documentation [here](https://solislemuslab.github.io/PhyloDiamond.jl/stable). Please report any bugs and errors by opening an
 [issue](https://github.com/solislemuslab/PhyloDiamond.jl/issues/new).
 
 ## Citation
