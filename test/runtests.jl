@@ -10,7 +10,9 @@ include("generate_cf.jl")
 
 @testset "PhyloDiamond.jl" begin
     cf = generate_cf([("1", "2"), ("3", "4"), ("5", "6"), ("7", "8", "9")], 0)
+    cf_before = copy(cf)
     dict = PhyloDiamond.phylo_diamond(cf, 5)
+    @test cf == cf_before # the input table is not modified
     @test length(dict) == 5
     @test dict[5] == "((9:1,5:1,6:1):4, (((7:1,8:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(3:1,4:1):2):1):1);"
     @test dict[4] == "((5:1,6:1):4, (((3:1,4:1):2, ((1:1,2:1):1)#H1:1::0.7):1, (#H1:1::0.3,(7:1,8:1,9:1):2):1):1);"

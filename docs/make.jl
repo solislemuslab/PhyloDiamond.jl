@@ -9,10 +9,9 @@ makedocs(
     warnonly = [:missing_docs],
     pages = [
         "Home" => "index.md",
-        "Manual" => [
-            "Installation" => "man/installation.md",
-            "Implementation" => "man/implementation.md",
-        ],
+        "Quick start" => "man/quickstart.md",
+        "Input and output" => "man/input_output.md",
+        "The method in brief" => "man/method.md",
         "Library" => [
             "Public Methods" => "lib/public_methods.md",
         ]
