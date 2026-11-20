@@ -17,6 +17,11 @@ level-1 network with **one hybridization event that forms a cycle of 4 nodes**
   contributed genes to the hybrid clade;
 - `n3`: the remaining clade.
 
+![The four clades around the hybridization cycle](../assets/method_clades.png)
+
+Each label stands for a clade of one or more taxa. The dashed blue edge is the
+hybrid edge: `n0` inherits genes from both the `n1` side and the `n2` side.
+
 The network type `N2222` gives the number of taxa in `n0`, `n1`, `n2`, `n3`, in that
 order. `N1112` has one taxon in each of `n0`, `n1`, `n2` and two in `n3`.
 
