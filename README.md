@@ -1,7 +1,7 @@
 # PhyloDiamond.jl <picture> <source media="(prefers-color-scheme: dark)" srcset="docs/logo_unrooted_trans.png"><img alt="phylodiamond logo" src="docs/logo_unrooted_trans.png" align=right width="400"></picture>
 
 [![CI](https://github.com/solislemuslab/PhyloDiamond.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/solislemuslab/PhyloDiamond.jl/actions/workflows/CI.yml)
-[![codecov.io](https://codecov.io/gh/zwu363/PhyloDiamond.jl/branch/master/graph/badge.svg?token=AXGI6GHHCY)](http://codecov.io/gh/zwu363/PhyloDiamond.jl)
+[![codecov.io](https://codecov.io/gh/solislemuslab/PhyloDiamond.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/solislemuslab/PhyloDiamond.jl)
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://solislemuslab.github.io/PhyloDiamond.jl/dev)
 
 ## Overview
@@ -33,11 +33,15 @@ To get help, check the documentation [here](https://solislemuslab.github.io/Phyl
 
 If you use `PhyloDiamond.jl` in your work, we kindly ask that you cite the following paper: 
 ```
-@article{wu_solis-lemus_2022,
-author = {Wu, Z. and Sol'{i}s-Lemus, C.},
-year = {2022},
-title = {{Ultrafast learning of 4-node hybridization cycles in phylogenetic networks using algebraic invariants}},
-url={https://arxiv.org/abs/2211.16647v1}
+@article{wu_solis-lemus_2024,
+author = {Wu, Zhaoxing and Sol{\'i}s-Lemus, Claudia},
+year = {2024},
+title = {{Ultrafast learning of four-node hybridization cycles in phylogenetic networks using algebraic invariants}},
+journal = {Bioinformatics Advances},
+volume = {4},
+number = {1},
+pages = {vbae014},
+doi = {10.1093/bioadv/vbae014}
 }
 ```
 

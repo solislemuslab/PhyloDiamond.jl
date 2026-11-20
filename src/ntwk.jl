@@ -5,17 +5,33 @@
 #using PhyloNetworks, PhyloPlots, DataFrames, CSV, Statistics, Distributions, Random, DelimitedFiles, Combinatorics, StatsBase
 
 """
-    Function to infer a 4-node hybridization cycle using the phylogenetic invariants method
-    (Wu and Solis-Lemus, 2022)
-    Input:
-        cf: DataFrame object with the concordance factor table (first 4 columns should be taxon names, last 3 columns should be cf values)
-        m: the number of optimal phylogenetic networks returned
-        output_filename: a file name for the output file (or "phylo_diamond.txt" by default)
-    output:
-        top m optimal phylogenetic networks in a Dict object
+    phylo_diamond(cf::DataFrame, m::Int64, output_filename::String="phylo_diamond.txt")
+
+Estimate the `m` best-fitting networks with one 4-node hybridization cycle from a
+table of concordance factors (CFs), using phylogenetic invariants
+(Wu and Solís-Lemus, 2024).
+
+`cf` must have 7 columns, used by position: the names of 4 taxa `a, b, c, d`,
+then the CFs of `ab|cd`, `ac|bd` and `ad|bc`. It needs a row for every set of
+4 taxa, and at least 6 taxa. `cf` itself is not modified.
+
+The report is printed and added at the end of `output_filename`.
+Returns a `Dict` from rank (1 = best) to the network in extended newick format.
+Only the clades are estimated: branch lengths and inheritance probabilities in
+the newick strings are placeholders.
+
+See also [`generate_cf_from_gene_trees`](@ref).
+
+# Example
+```julia
+df = generate_cf_from_gene_trees("genetrees.tre")
+res = phylo_diamond(df, 5)
+res[1] # best network
+```
 """
 function phylo_diamond(cf::DataFrame, m::Int64, output_filename::String="phylo_diamond.txt")
-    cf = rename!(cf,[:tx1,:tx2, :tx3, :tx4, :expCF12,:expCF13,:expCF14])
+    # work on a copy: the renaming here and in taxon_dict must not change the user's table
+    cf = rename(cf,[:tx1,:tx2, :tx3, :tx4, :expCF12,:expCF13,:expCF14])
     t = cf_to_t(cf) #get all taxon names
 
     if size(cf, 1) != binomial(length(t), 4) || size(cf, 2) != 7 #check the dimension of cf table
@@ -34,14 +50,23 @@ function phylo_diamond(cf::DataFrame, m::Int64, output_filename::String="phylo_d
 end
 
 """
-    Function to infer a 4-node hybridization cycle using the phylogenetic invariants method
-    (Wu and Solis-Lemus, 2022)
-    Input:
-        gene_trees_filename: textfile with gene trees (one per row) in parenthetical format
-        m: the number of optimal phylogenetic networks returned
-        output_filename: a file name for the output file (or "phylo_diamond.txt" by default)
-    output:
-        top m optimal phylogenetic networks in a Dict object
+    phylo_diamond(gene_trees_filename::String, m::Int64, output_filename::String="phylo_diamond.txt")
+
+Estimate the `m` best-fitting networks with one 4-node hybridization cycle from a
+file of gene trees (one newick tree per line), using phylogenetic invariants
+(Wu and Solís-Lemus, 2024). The gene trees are first summarized into concordance
+factors with [`generate_cf_from_gene_trees`](@ref). There must be at least 6 taxa.
+
+The report is printed and added at the end of `output_filename`.
+Returns a `Dict` from rank (1 = best) to the network in extended newick format.
+Only the clades are estimated: branch lengths and inheritance probabilities in
+the newick strings are placeholders.
+
+# Example
+```julia
+res = phylo_diamond("genetrees.tre", 5)
+res[1] # best network
+```
 """
 function phylo_diamond(gene_trees_filename::String, m::Int64, output_filename::String="phylo_diamond.txt")
     cf = generate_cf_from_gene_trees(gene_trees_filename)

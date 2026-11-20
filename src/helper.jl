@@ -188,8 +188,12 @@ end
 
 
 """
-    input: the name of the file storing a list of gene trees
-    output: the table of CF values
+    generate_cf_from_gene_trees(filename_genetrees)
+
+Read gene trees from a file (one newick tree per line) and return a `DataFrame` of
+concordance factors: for each set of 4 taxa, the proportion of gene trees with each
+of the 3 quartet topologies. The columns are `t1, t2, t3, t4, CF12_34, CF13_24, CF14_23`,
+the format that [`phylo_diamond`](@ref) takes.
 """
 function generate_cf_from_gene_trees(filename_genetrees)
     genetrees = readmultinewick(filename_genetrees)
